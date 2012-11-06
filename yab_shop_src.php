@@ -548,8 +548,11 @@ function yab_shop_checkout($atts)
 			$checkout_form = '';
 		}
 
+		// Covers eventuality that 'order' input type is an image or a <button>
+		$is_order = ( (ps('order') != '') || (ps('order_x') != '') );
+
 		if (!$checkout_err) {
-			if (ps('order') != '')
+			if ($is_order)
 			{
 				$ps_order = array();
 				$ps_order = yab_shop_clean_input($_POST);
@@ -967,7 +970,8 @@ function yab_shop_check_item($cart, $productid, $product_property_1, $product_pr
 function yab_shop_return_input($input)
 {
 	$output = '';
-	if (ps('order') != '')
+	$is_order = ( (ps('order') != '') || (ps('order_x') != '') );
+	if ($is_order)
 		$output = yab_shop_clean_input($_POST[$input]);
 	elseif (cs('yab_shop_remember') == 1)
 		$output = cs('yab_shop_'.$input);
