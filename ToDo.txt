@@ -1,0 +1,12 @@
+TODO
+----
+ -> Merge in trenc's 0.8.1 fixes
+ -> Figure out how to do Textpacks when MLP is already integrated so custom strings in 0.8.x are not trashed on upgrade
+ -> Verify Google Checkout functionality
+ -> Add interface for configuring shipping weights
+ -> Option to hide the optional checkout fields completely
+ -> Fix tag order http://forum.textpattern.com/viewtopic.php?pid=256397#p256397 (session_start issue? Centralise the session code so all tags set the same session if not already started, thus the session is instantiated irrespective of tag order?)
+ -> Improve currency symbol support
+ -> Modularise the code so 3rd party payment gateways can be linked in more easily (i.e. make PayPal and Google Checkout into modules)
+ -> Introduce extra callbacks to allow more fine-grained customisation
+ 

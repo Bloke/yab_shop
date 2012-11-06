@@ -1,0 +1,33 @@
+Changelog
+---------
+
+v0.9.0
+ -> Added MLP support
+ -> Added callbacks:
+    -> yab_shop_cart_add
+    -> yab_shop_cart_item_update
+    -> yab_shop_cart_remove
+    -> yab_shop_on_checkout (steps: paypal; google; default,success; default,failure; default,partial; default,no_affirmation)
+    -> yab_shop_on_checkout_empty_cart
+ -> Added pluggable_ui callbacks:
+    -> event: yab_shop, steps:
+         checkout_cart_preamble
+         checkout_cart_postamble
+         checkout_form_preamble
+         checkout_form_postamble
+ -> Added multiple promo codes
+ -> Added multiple tax bands
+ -> Added shipping by weight
+ -> Added country select list option
+ -> Added RRP support for Price custom field. Specify as: price|RRP
+ -> Added yab_shop_price attributes 'type' (price/rrp/saving) and 'raw' (to retrieve value without currency prefix: useful for calculations)
+ -> Added mandatory properties option (thanks Morgan)
+ -> Permitted checkout fields to be optional
+ -> Permitted customisable body admin/affirmation e-mail
+ -> Affirmation e-mail no longer triggers required e-mail field (if missing, e-mailing is skipped)
+ -> Fixed yab_shop_cart_quantity for standalone use
+ -> Fixed 'currency not double' warning
+ -> Fixed item_number_N being passed in encrypted paypal buttons
+ -> Swapped merchant_return_link for return IPN var
+ -> Converted code into a single plugin and added update system
+ -> Rejigged prefs panel
