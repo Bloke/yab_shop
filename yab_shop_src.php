@@ -2444,7 +2444,7 @@ function yab_calc_promo_prices($price = false, $discount = 0)
 {
 	$price_tmp = $price * ($discount / 100);
 	$price = $price - $price_tmp;
-	return $price;
+	return round($price, 2);
 }
 
 function yab_remember_checkbox()
