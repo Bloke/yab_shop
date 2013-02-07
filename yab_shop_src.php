@@ -4039,10 +4039,11 @@ function yab_shop_update()
 	global $DB;
 
 	// Upgrade yab_shop_prefs val field from VARCHAR to TEXT
+	// TODO: better call is SHOW COLUMNS FROM yab_shop_prefs WHERE field = 'val', then check the 'Type' column
 	$ret = @safe_field("DATA_TYPE", "INFORMATION_SCHEMA.COLUMNS", "table_name = '" . PFX . "yab_shop_prefs' AND table_schema = '" . $DB->db . "' AND column_name = 'val'");
 	if ($ret != 'text')
 	{
-		safe_alter('yab_shop_prefs', "CHANGE `val` `val` TEXT NOT NULL DEFAULT ''", 1);
+		safe_alter('yab_shop_prefs', "CHANGE `val` `val` TEXT NOT NULL DEFAULT ''");
 	}
 
 	// Add new pref items
