@@ -367,6 +367,7 @@ if (!class_exists('PayPalEWP'))
 		var $certificateFile;
 		var $privateKey;
 		var $privateKeyFile;
+		var $privateKeyPass;
 		var $paypalCertificate;
 		var $paypalCertificateFile;
 		var $certificateID;
@@ -377,9 +378,13 @@ if (!class_exists('PayPalEWP'))
 		 * Constructor
 		 *
 		 */
-		function __PayPalEWP()
+		function __construct()
 		{
-				$this->error = 0;
+			$this->error = 0;
+
+			if (defined('YAB_SHOP_PRIVATE_KEY_PASS')) {
+				$this->privateKeyPass = YAB_SHOP_PRIVATE_KEY_PASS;
+			}
 		}
 
 		function setTempDir($tempdir)
@@ -441,7 +446,9 @@ if (!class_exists('PayPalEWP'))
 				$privateKey = fread($handle, $size);
 				@fclose($handle);
 
-				if (($certificate !== false) and ($privateKey !== false) and openssl_x509_check_private_key($certificate, $privateKey))
+				$keyCheckData = ($this->privateKeyPass) ? array(0 => $privateKey, 1 => $this->privateKeyPass) : $privateKey;
+
+				if (($certificate !== false) and ($privateKey !== false) and openssl_x509_check_private_key($certificate, $keyCheckData))
 				{
 					$this->certificate		 = $certificate;
 					$this->certificateFile = $certificateFilename;
@@ -529,7 +536,9 @@ if (!class_exists('PayPalEWP'))
 
 			$out = fopen("{$dataFile}_signed.txt", "w+");
 
-			if (!openssl_pkcs7_sign("{$dataFile}_data.txt", "{$dataFile}_signed.txt", $this->certificate, $this->privateKey, array(), PKCS7_BINARY))
+			$keySignData = ($this->privateKeyPass) ? array(0 => $privateKey, 1 => $this->privateKeyPass) : $privateKey;
+
+			if (!openssl_pkcs7_sign("{$dataFile}_data.txt", "{$dataFile}_signed.txt", $this->certificate, $keySignData, array(), PKCS7_BINARY))
 			{
 				$this->error = 4;
 				return false;
