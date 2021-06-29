@@ -17,7 +17,7 @@ $plugin['name'] = 'yab_shop_core';
 // 1 = Plugin help is in raw HTML.  Not recommended.
 # $plugin['allow_html_help'] = 1;
 
-$plugin['version'] = '0.9.0';
+$plugin['version'] = '0.9.1';
 $plugin['author'] = 'Tommy Schmucker';
 $plugin['author_uri'] = 'http://www.yablo.de/';
 $plugin['description'] = 'Shopping Cart Plugin (Core)';
@@ -76,8 +76,7 @@ if (!defined('txpinterface'))
  * Version 2: http://www.gnu.org/licenses/gpl-2.0.html
  * Version 3: http://www.gnu.org/licenses/gpl-3.0.html
  *
- * v0.8.0_mlp changes:
- *  -> Added MLP support
+ * v0.9.0 changes:
  *  -> Added callbacks:
  *     -> yab_shop_cart_add
  *     -> yab_shop_cart_item_update
@@ -105,8 +104,7 @@ if (!defined('txpinterface'))
  *  -> Added RRP support for price custom field. Specify as: price|RRP
  *  -> Added: yab_shop_price attributes 'type' (price/rrp/saving) and 'raw' (to retrieve value without currency prefix)
  * TODO:
- *  -> Verify with Google Checkout
- *  -> Test MLP
+ *  -> Remove Google Checkout
  *  -> Add interface for configuring shipping weights
  *  -> Option to hide the optional checkout fields completely
  *  -> Revert the shop_admin strings to their defaults before publish
@@ -370,7 +368,7 @@ function yab_shop_cart_subtotal($atts)
 			array(
 				'showalways'	=> '1',
 				'break'				=> br,
-				'label'				=> yab_shop_lang('sub_total'),
+				'label'				=> gTxt('yab_shop_sub_total'),
 				'wraptag'			=> '',
 				'class'				=> '',
 				'sep'					=> ': ',
@@ -412,7 +410,7 @@ function yab_shop_cart_quantity($atts)
 				'output'	=> 'single',
 				'showalways'	=> '1',
 				'break'				=> br,
-				'label'				=> yab_shop_lang('quantity'),
+				'label'				=> gTxt('yab_shop_quantity'),
 				'wraptag'			=> '',
 				'class'				=> '',
 				'sep'					=> ': ',
@@ -466,9 +464,9 @@ function yab_shop_cart_message($atts)
 	extract(
 		lAtts(
 			array(
-				'add'		=> yab_shop_lang('cart_message_add'),
-				'edit'	=> yab_shop_lang('cart_message_edit'),
-				'del'		=> yab_shop_lang('cart_message_del'),
+				'add'		=> gTxt('yab_shop_cart_message_add'),
+				'edit'	=> gTxt('yab_shop_cart_message_edit'),
+				'del'		=> gTxt('yab_shop_cart_message_del'),
 				'break'				=> br,
 				'wraptag'			=> '',
 				'class'				=> ''
@@ -493,7 +491,7 @@ function yab_shop_cart_link($atts)
 	extract(
 		lAtts(
 			array(
-				'label'				=> yab_shop_lang('to_checkout'),
+				'label'				=> gTxt('yab_shop_to_checkout'),
 				'break'				=> br,
 				'showalways'	=> '1',
 				'wraptag'			=> '',
@@ -506,7 +504,7 @@ function yab_shop_cart_link($atts)
 	if (!is_object($cart))
 		$cart = new wfCart();
 
-	$url = yab_shop_mlp_inject( pagelinkurl(array('s' => yab_shop_config('checkout_section_name'))));
+	$url = pagelinkurl(array('s' => yab_shop_config('checkout_section_name')));
 	$label = htmlspecialchars($label);
 	$out = '';
 
@@ -533,7 +531,7 @@ function yab_shop_checkout($atts)
 	extract(
 		lAtts(
 			array(
-				'summary'	=> yab_shop_lang('checkout_summary'),
+				'summary'	=> gTxt('yab_shop_checkout_summary'),
 			),$atts
 		)
 	);
@@ -550,7 +548,7 @@ function yab_shop_checkout($atts)
 	if ($cart->itemcount > 0)
 	{
 		$affirmation = yab_shop_config('order_affirmation_mail');
-		$to_shop = graf(tag(yab_shop_lang('checkout_history_back'), 'a', ' href="'.yab_shop_mlp_inject(yab_shop_config('back_to_shop_link')).'"'), ' class="history-back"');
+		$to_shop = graf(tag(gTxt('yab_shop_checkout_history_back'), 'a', ' href="'.yab_shop_config('back_to_shop_link').'"'), ' class="history-back"');
 		$checkout_display = pluggable_ui('yab_shop', 'checkout_cart_preamble', '', $cart, $yab_shop_prefs);
 		$checkout_display .= yab_shop_build_checkout_table($cart, $summary);
 
@@ -560,14 +558,14 @@ function yab_shop_checkout($atts)
 
 		$checkout_display .= yab_build_promo_input($cart);
 		$checkout_display .= pluggable_ui('yab_shop', 'checkout_cart_postamble', '', $cart, $yab_shop_prefs);
-		$checkout_message = graf(yab_shop_lang('checkout_required_field_notice'), ' class="yab-shop-notice"');
+		$checkout_message = graf(gTxt('yab_shop_checkout_required_field_notice'), ' class="yab-shop-notice"');
 		$checkout_form = yab_shop_build_checkout_form();
 
 		// Verify the shipping method is appropriate
 		$ship_data = yab_shop_available_shipping_options();
 		if (!$ship_data['method_available']) {
 			$checkout_err = true;
-			$checkout_message = graf(yab_shop_lang('checkout_shipping_unavailable'), ' class="yab-shop-notice"');
+			$checkout_message = graf(gTxt('yab_shop_checkout_shipping_unavailable'), ' class="yab-shop-notice"');
 			$checkout_form = '';
 		}
 
@@ -579,7 +577,7 @@ function yab_shop_checkout($atts)
 			{
 				$ps_order = array();
 				$ps_order = yab_shop_clean_input($_POST);
-				$checkout_message = graf(yab_shop_lang('checkout_mail_field_error'), ' class="yab-shop-required-notice" id="yab-shop-checkout-anchor"');
+				$checkout_message = graf(gTxt('yab_shop_checkout_mail_field_error'), ' class="yab-shop-required-notice" id="yab-shop-checkout-anchor"');
 	
 				$notice = yab_shop_check_required_fields($ps_order);
 				if ($notice != '')
@@ -595,7 +593,7 @@ function yab_shop_checkout($atts)
 					yab_remember(ps('remember'), ps('forget'), ps('checkbox_type'));
 					switch (ps('payment'))
 					{
-						case yab_shop_lang('checkout_payment_paypal'):
+						case gTxt('yab_shop_checkout_payment_paypal'):
 							$checkout_display = yab_shop_build_checkout_table($cart, $summary, $no_change = '1');
 							$checkout_message = '';
 							if (yab_shop_config('use_encrypted_paypal_button') == '1')
@@ -606,7 +604,7 @@ function yab_shop_checkout($atts)
 							callback_event( 'yab_shop_on_checkout', 'paypal', 0, $cart );
 							$cart->empty_cart();
 							break;
-						case yab_shop_lang('checkout_payment_google'):
+						case gTxt('yab_shop_checkout_payment_google'):
 							$checkout_display = yab_shop_build_checkout_table($cart, $summary, $no_change = '1');
 							$checkout_message = '';
 							$checkout_form = yab_shop_build_google_form($cart);
@@ -614,16 +612,16 @@ function yab_shop_checkout($atts)
 							$cart->empty_cart();
 							break;
 						default:
-							$checkout_message = graf(yab_shop_lang('checkout_mail_error'), ' class="yab-shop-message"');
-							if (yab_shop_shop_mail(yab_shop_config('admin_mail'), yab_shop_lang('admin_mail_subject'), yab_shop_build_mail_body($cart, $ps_order)))
+							$checkout_message = graf(gTxt('yab_shop_checkout_mail_error'), ' class="yab-shop-message"');
+							if (yab_shop_shop_mail(yab_shop_config('admin_mail'), gTxt('yab_shop_admin_mail_subject'), yab_shop_build_mail_body($cart, $ps_order)))
 							{
 								if ($affirmation == '1') {
-									$checkout_message = graf(yab_shop_lang('checkout_mail_affirmation_error'), ' class="yab-shop-message"');
+									$checkout_message = graf(gTxt('yab_shop_checkout_mail_affirmation_error'), ' class="yab-shop-message"');
 									if (isset($ps_order['email']) and $ps_order['email'] != '') {
-										if (yab_shop_shop_mail($ps_order['email'], yab_shop_lang('affirmation_mail_subject'), yab_shop_build_mail_body($cart, $ps_order, '1')))
+										if (yab_shop_shop_mail($ps_order['email'], gTxt('yab_shop_affirmation_mail_subject'), yab_shop_build_mail_body($cart, $ps_order, '1')))
 										{
 											yab_shop_redirect(yab_shop_config('checkout_thanks_site'));
-											$checkout_message = graf(yab_shop_lang('checkout_mail_affirmation_success'), ' class="yab-shop-message"').$to_shop;
+											$checkout_message = graf(gTxt('yab_shop_checkout_mail_affirmation_success'), ' class="yab-shop-message"').$to_shop;
 											callback_event( 'yab_shop_on_checkout', 'default,success', 0, $cart );
 										}
 										else
@@ -637,7 +635,7 @@ function yab_shop_checkout($atts)
 									$cart->empty_cart();
 	
 									yab_shop_redirect(yab_shop_config('checkout_thanks_site'));
-									$checkout_message = graf(yab_shop_lang('checkout_mail_success'), ' class="yab-shop-message"').$to_shop;
+									$checkout_message = graf(gTxt('yab_shop_checkout_mail_success'), ' class="yab-shop-message"').$to_shop;
 								}
 							}
 							else
@@ -654,13 +652,13 @@ function yab_shop_checkout($atts)
 		if (gps('return') != '')
 		{
 			yab_shop_redirect(yab_shop_config('checkout_thanks_site'));
-			$checkout_display = graf(yab_shop_lang('paypal_return_message'), ' class="yab-shop-message"').graf(tag(yab_shop_lang('checkout_history_back'), 'a', ' href="'.yab_shop_mlp_inject(yab_shop_config('back_to_shop_link')).'"'), ' class="history-back"');
+			$checkout_display = graf(gTxt('yab_shop_paypal_return_message'), ' class="yab-shop-message"').graf(tag(gTxt('yab_shop_checkout_history_back'), 'a', ' href="'.yab_shop_config('back_to_shop_link').'"'), ' class="history-back"');
 		}
 		else
 		  $checkout_display = callback_event( 'yab_shop_on_checkout_empty_cart' );
 
 		if( '' === $checkout_display )
-			$checkout_display = graf(yab_shop_lang('empty_cart'), ' class="yab-empty"');
+			$checkout_display = graf(gTxt('yab_shop_empty_cart'), ' class="yab-empty"');
 
 		return $checkout_display;
 	}
@@ -674,7 +672,7 @@ function yab_shop_add( $atts )
 				'hide_options'	=> '',
 				'options_hint_class' => 'yab_shop_option_hint',
 				'options_hint_wraptag' => 'p',
-				'options_hint' => yab_shop_lang('has_options_hint'),
+				'options_hint' => gTxt('yab_shop_has_options_hint'),
 			),$atts
 		)
 	);
@@ -688,7 +686,7 @@ function yab_shop_add( $atts )
 	$property_2_name = yab_shop_config('custom_field_property_2_name');
 	$property_3_name = yab_shop_config('custom_field_property_3_name');
 	$hinput = '';
-	$purl = yab_shop_mlp_inject( permlinkurl_id($id));
+	$purl = permlinkurl_id($id);
 	$script = '';
 
 	if ($is_article_list == true)
@@ -704,16 +702,16 @@ function yab_shop_add( $atts )
 		$script .= yab_shop_property_prices($id).n;
 
 	$options =
-	  yab_shop_build_custom_select_tag($property_1_name, yab_shop_lang('custom_field_property_1'), $hide_options).
-		yab_shop_build_custom_select_tag($property_2_name, yab_shop_lang('custom_field_property_2'), $hide_options).
-		yab_shop_build_custom_select_tag($property_3_name, yab_shop_lang('custom_field_property_3'), $hide_options);
+	  yab_shop_build_custom_select_tag($property_1_name, gTxt('yab_shop_custom_field_property_1'), $hide_options).
+		yab_shop_build_custom_select_tag($property_2_name, gTxt('yab_shop_custom_field_property_2'), $hide_options).
+		yab_shop_build_custom_select_tag($property_3_name, gTxt('yab_shop_custom_field_property_3'), $hide_options);
 
 	$add_form = tag(
 		$hinput.
 		$options.
 		graf(
 			fInput('text','qty','1','','','','1').
-			fInput('submit','add',yab_shop_lang('add_to_cart'),'submit'),
+			fInput('submit','add',gTxt('yab_shop_add_to_cart'),'submit'),
 			' class="yab-add"'
 		),
 	'form', ' method="post" action="'.$purl.'#yab-shop-form-'.$id.'" id="yab-shop-form-'.$id.'"'
@@ -954,12 +952,12 @@ function yab_shop_check_required_fields($ps_order)
 	foreach ($ps_order as $key => $ps)
 	{
 		if (preg_match('/\|r$/', $key) and $ps == '')
-			$notice .= tag(yab_shop_lang('checkout_'.preg_replace('/\|r$/', '', $key).''), 'li');
+			$notice .= tag(gTxt('yab_shop_checkout_'.preg_replace('/\|r$/', '', $key).''), 'li');
 	}
 
 	if (isset($ps_order['email']) and $ps_order['email'] != '') {
 		if (!is_valid_email($ps_order['email'])) {
-			$notice .= tag(yab_shop_lang('checkout_mail_email_error'), 'li');
+			$notice .= tag(gTxt('yab_shop_checkout_mail_email_error'), 'li');
 		}
 	}
 
@@ -1040,15 +1038,15 @@ function yab_shop_build_paypal_form($cart)
 	if (ps('phone'.$req_matrix['phone']['mod']))
 		$phone = hInput('contact_phone', yab_shop_return_input('phone'.$req_matrix['phone']['mod'])).n;
 	$action = 'https://www'.$subdomain.'.paypal.com/cgi-bin/webscr';
-	$message = yab_shop_lang('checkout_paypal_no_forward');
-	$message2 = yab_shop_lang('checkout_paypal_forward');
+	$message = gTxt('yab_shop_checkout_paypal_no_forward');
+	$message2 = gTxt('yab_shop_checkout_paypal_forward');
 	$business_email = yab_shop_config('paypal_business_mail');
 	$country = yab_shop_return_input('country'.$req_matrix['country']['mod']);
 	if (!$country) {
 		$country = yab_shop_config('paypal_prefilled_country');
 	}
-	$lc = yab_shop_mlp_select_lang( yab_shop_config('paypal_interface_language') );
-	$thanks = yab_shop_mlp_inject( yab_shop_config('checkout_thanks_site') );
+	$lc = yab_shop_config('paypal_interface_language');
+	$thanks = yab_shop_config('checkout_thanks_site');
 	$currency = yab_shop_config('currency');
 	$ship_data = yab_shop_available_shipping_options();
 	$shipping = $ship_data['shipping_costs']; // Assumption is this won't return an error since we've trapped shipping errors earlier
@@ -1067,19 +1065,19 @@ function yab_shop_build_paypal_form($cart)
 		$properties = '';
 		if (!empty($item['property_1']))
 		{
-			$properties .=	hInput('on0_'.$i, yab_shop_lang('custom_field_property_1')).n.
+			$properties .=	hInput('on0_'.$i, gTxt('yab_shop_custom_field_property_1')).n.
 											hInput('os0_'.$i, $item['property_1']).n;
 		}
 		if (!empty($item['property_2']))
 		{
 			if (!empty($item['property_3']))
 			{
-				$properties .=	hInput('on1_'.$i, yab_shop_lang('custom_field_property_2').'/'.yab_shop_lang('custom_field_property_3')).n.
+				$properties .=	hInput('on1_'.$i, gTxt('yab_shop_custom_field_property_2').'/'.gTxt('yab_shop_custom_field_property_3')).n.
 												hInput('os1_'.$i, $item['property_2'].'/'.$item['property_3']).n;
 			}
 			else
 			{
-				$properties .=	hInput('on1_'.$i, yab_shop_lang('custom_field_property_2')).n.
+				$properties .=	hInput('on1_'.$i, gTxt('yab_shop_custom_field_property_2')).n.
 												hInput('os1_'.$i, $item['property_2']).n;
 			}
 		}
@@ -1087,7 +1085,7 @@ function yab_shop_build_paypal_form($cart)
 		{
 			if (!empty($item['property_3']))
 			{
-				$properties .=	hInput('on1_'.$i, yab_shop_lang('custom_field_property_3')).n.
+				$properties .=	hInput('on1_'.$i, gTxt('yab_shop_custom_field_property_3')).n.
 												hInput('os1_'.$i, $item['property_3']).n;
 			}
 		}
@@ -1119,7 +1117,7 @@ function yab_shop_build_paypal_form($cart)
 		$state.
 		$custom.
 		$products.
-		fInput('submit','paypal', yab_shop_lang('checkout_paypal_button'), 'submit', '', '', '', '', 'yabpaypalsubmit').n,'form', ' method="post" action="'.$action.'" id="yab-paypal-form"'
+		fInput('submit','paypal', gTxt('yab_shop_checkout_paypal_button'), 'submit', '', '', '', '', 'yabpaypalsubmit').n,'form', ' method="post" action="'.$action.'" id="yab-paypal-form"'
 	);
 
 	return $form;
@@ -1152,15 +1150,15 @@ function yab_shop_build_paypal_encrypted_form($cart)
 		$tax = number_format(yab_shop_calculate_sum('tax'),2);
 
 	$action = 'https://www'.$subdomain.'.paypal.com/cgi-bin/webscr';
-	$message = yab_shop_lang('checkout_paypal_no_forward');
-	$message2 = yab_shop_lang('checkout_paypal_forward');
+	$message = gTxt('yab_shop_checkout_paypal_no_forward');
+	$message2 = gTxt('yab_shop_checkout_paypal_forward');
 	$business_email = yab_shop_config('paypal_business_mail');
 	$country = yab_shop_return_input('country'.$req_matrix['country']['mod']);
 	if (!$country) {
 		$country = yab_shop_config('paypal_prefilled_country');
 	}
-	$lc = yab_shop_mlp_select_lang( yab_shop_config('paypal_interface_language'));
-	$thanks = yab_shop_mlp_inject( yab_shop_config('checkout_thanks_site') );
+	$lc = yab_shop_config('paypal_interface_language');
+	$thanks = yab_shop_config('checkout_thanks_site');
 	$currency = yab_shop_config('currency');
 	$ship_data = yab_shop_available_shipping_options();
 	$shipping = $ship_data['shipping_costs']; // Assumption is this won't return an error since we've trapped shipping errors earlier
@@ -1212,19 +1210,19 @@ function yab_shop_build_paypal_encrypted_form($cart)
 
 		if (!empty($item['property_1']))
 		{
-			$parameters['on0_'.$i] = yab_shop_lang('custom_field_property_1');
+			$parameters['on0_'.$i] = gTxt('yab_shop_custom_field_property_1');
 			$parameters['os0_'.$i] = $item['property_1'];
 		}
 		if (!empty($item['property_2']))
 		{
 			if (!empty($item['property_3']))
 			{
-				$parameters['on1_'.$i] = yab_shop_lang('custom_field_property_2').'/'.yab_shop_lang('custom_field_property_3');
+				$parameters['on1_'.$i] = gTxt('yab_shop_custom_field_property_2').'/'.gTxt('yab_shop_custom_field_property_3');
 				$parameters['os1_'.$i] = $item['property_2'].'/'.$item['property_3'];
 			}
 			else
 			{
-				$parameters['on1_'.$i] = yab_shop_lang('custom_field_property_2');
+				$parameters['on1_'.$i] = gTxt('yab_shop_custom_field_property_2');
 				$parameters['os1_'.$i] = $item['property_2'];
 			}
 		}
@@ -1232,7 +1230,7 @@ function yab_shop_build_paypal_encrypted_form($cart)
 		{
 			if (!empty($item['property_3']))
 			{
-				$parameters['on1_'.$i] = yab_shop_lang('custom_field_property_3');
+				$parameters['on1_'.$i] = gTxt('yab_shop_custom_field_property_3');
 				$parameters['os1_'.$i] = $item['property_3'];
 			}
 		}
@@ -1248,7 +1246,7 @@ function yab_shop_build_paypal_encrypted_form($cart)
 	$form .= tag(
 		hInput('cmd', '_s-xclick').n.
 		hInput('encrypted', $encryptedButton).n.
-		fInput('submit','paypal', yab_shop_lang('checkout_paypal_button'), 'submit', '', '', '', '', 'yabpaypalsubmit').n,'form', ' method="post" action="'.$action.'" id="yab-paypal-form"'
+		fInput('submit','paypal', gTxt('yab_shop_checkout_paypal_button'), 'submit', '', '', '', '', 'yabpaypalsubmit').n,'form', ' method="post" action="'.$action.'" id="yab-paypal-form"'
 	);
 
 	switch ($paypal->error)
@@ -1278,8 +1276,8 @@ function yab_shop_build_google_form($cart)
 {
 	$merchant_id = yab_shop_config('google_merchant_id');
 	$merchant_key = yab_shop_config('google_merchant_key');
-	$message = yab_shop_lang('checkout_google_no_forward');
-	$message2 = yab_shop_lang('checkout_google_forward');
+	$message = gTxt('yab_shop_checkout_google_no_forward');
+	$message2 = gTxt('yab_shop_checkout_google_forward');
 	$currency = yab_shop_config('currency');
 	$ship_data = yab_shop_available_shipping_options();
 	$shipping = $ship_data['shipping_costs']; // Assumption is this won't return an error since we've trapped shipping errors earlier
@@ -1300,17 +1298,17 @@ function yab_shop_build_google_form($cart)
 		$gi = 0;
 		if (!empty($item['property_1']))
 		{
-			$gitem_property_1 = yab_shop_lang('custom_field_property_1').': '.$item['property_1'];
+			$gitem_property_1 = gTxt('yab_shop_custom_field_property_1').': '.$item['property_1'];
 			$gi++;
 		}
 		if (!empty($item['property_2']))
 		{
-			$gitem_property_2 = ': '.yab_shop_lang('custom_field_property_2').': '.$item['property_2'];
+			$gitem_property_2 = ': '.gTxt('yab_shop_custom_field_property_2').': '.$item['property_2'];
 			$gi++;
 		}
 		if (!empty($item['property_3']))
 		{
-			$gitem_property_3 = ': '.yab_shop_lang('custom_field_property_3').': '.$item['property_3'];
+			$gitem_property_3 = ': '.gTxt('yab_shop_custom_field_property_3').': '.$item['property_3'];
 			$gi++;
 		}
 
@@ -1370,7 +1368,7 @@ function yab_shop_build_checkout_form()
 	if (yab_shop_config('using_checkout_state') == '1')
 	{
 		$state = graf(
-			tag(yab_shop_lang('checkout_state'), 'label', ' for="state"').
+			tag(gTxt('yab_shop_checkout_state'), 'label', ' for="state"').
 			fInput('text', 'state'.$req_matrix['state']['mod'], yab_shop_return_input('state'.$req_matrix['state']['mod']), '', '', '', '', '', 'state'), ' class="yab-shop-state'.$req_matrix['state']['cls'].'"'
 		);
 	}
@@ -1379,7 +1377,7 @@ function yab_shop_build_checkout_form()
 	{
 		$key = yab_shop_return_input('country'.$req_matrix['country']['mod']);
 		$country = graf(
-			tag(yab_shop_lang('checkout_country'), 'label', ' for="country"').
+			tag(gTxt('yab_shop_checkout_country'), 'label', ' for="country"').
 			yab_shop_get_countries('country'.$req_matrix['country']['mod'], $key, true, '', 'country'), ' class="yab-shop-country'.$req_matrix['country']['cls'].'"'
 		);
 	}
@@ -1388,7 +1386,7 @@ function yab_shop_build_checkout_form()
 	{
 		$tou = graf(
 			checkbox('tou', '1', '0', '', 'yab-tou').
-			tag(yab_shop_lang('checkout_terms_of_use'), 'label', ' for="yab-tou"'),
+			tag(gTxt('yab_shop_checkout_terms_of_use'), 'label', ' for="yab-tou"'),
 			' class="yab-shop-required tou"'
 			);
 	}
@@ -1397,47 +1395,47 @@ function yab_shop_build_checkout_form()
 		fieldset(
 			pluggable_ui('yab_shop', 'checkout_form_preamble', '', $yab_shop_prefs).
 			graf(
-				tag(yab_shop_lang('checkout_firstname'), 'label', ' for="firstname"').
+				tag(gTxt('yab_shop_checkout_firstname'), 'label', ' for="firstname"').
 				fInput('text', 'firstname'.$req_matrix['firstname']['mod'], yab_shop_return_input('firstname'.$req_matrix['firstname']['mod']), '', '', '', '', '', 'firstname'), ' class="yab-shop-firstname'.$req_matrix['firstname']['cls'].'"'
 			).
 			graf(
-				tag(yab_shop_lang('checkout_surname'), 'label', ' for="surname"').
+				tag(gTxt('yab_shop_checkout_surname'), 'label', ' for="surname"').
 				fInput('text', 'surname'.$req_matrix['surname']['mod'], yab_shop_return_input('surname'.$req_matrix['surname']['mod']), '', '', '', '', '', 'surname'), ' class="yab-shop-surname'.$req_matrix['surname']['cls'].'"'
 			).
 			graf(
-				tag(yab_shop_lang('checkout_street'), 'label', ' for="street"').
+				tag(gTxt('yab_shop_checkout_street'), 'label', ' for="street"').
 				fInput('text', 'street'.$req_matrix['street']['mod'], yab_shop_return_input('street'.$req_matrix['street']['mod']), '', '', '', '', '', 'street'), ' class="yab-shop-street'.$req_matrix['street']['cls'].'"'
 			).
 			graf(
-				tag(yab_shop_lang('checkout_city'), 'label', ' for="city" class="city"').
+				tag(gTxt('yab_shop_checkout_city'), 'label', ' for="city" class="city"').
 				fInput('text', 'city'.$req_matrix['city']['mod'], yab_shop_return_input('city'.$req_matrix['city']['mod']), '', '', '', '', '', 'city'), ' class="yab-shop-city'.$req_matrix['city']['cls'].'"'
 			).
 			graf(
-				tag(yab_shop_lang('checkout_postal'), 'label', ' for="postal"').
+				tag(gTxt('yab_shop_checkout_postal'), 'label', ' for="postal"').
 				fInput('text', 'postal'.$req_matrix['postal']['mod'], yab_shop_return_input('postal'.$req_matrix['postal']['mod']), '', '', '', '', '', 'postal'), ' class="yab-shop-zip'.$req_matrix['postal']['cls'].'"'
 			).
 			$state.$country.
 			graf(
-				tag(yab_shop_lang('checkout_phone'), 'label', ' for="phone"').
+				tag(gTxt('yab_shop_checkout_phone'), 'label', ' for="phone"').
 				fInput('text', 'phone'.$req_matrix['phone']['mod'], yab_shop_return_input('phone'.$req_matrix['phone']['mod']), '', '', '', '', '', 'phone'), ' class="yab-shop-phone'.$req_matrix['phone']['cls'].'"'
 			).
 			graf(
-				tag(yab_shop_lang('checkout_email'), 'label', ' for="email"').
+				tag(gTxt('yab_shop_checkout_email'), 'label', ' for="email"').
 				fInput('text', 'email'.$req_matrix['email']['mod'], yab_shop_return_input('email'.$req_matrix['email']['mod']), '', '', '', '', '', 'email'), ' class="yab-shop-email'.$req_matrix['email']['cls'].'"'
 			).
 			yab_shop_checkout_payment_methods().
 			graf(
-				tag(yab_shop_lang('checkout_message'), 'label', ' for="message"').
+				tag(gTxt('yab_shop_checkout_message'), 'label', ' for="message"').
 				'<textarea cols="40" rows="5" name="message" id="message">'.yab_shop_return_input('message').'</textarea>', ' class="yab-shop-text"'
 			).
 			$tou.
 			graf(yab_remember_checkbox(), ' class="tou remember"').
 			pluggable_ui('yab_shop', 'checkout_form_postamble', '', $yab_shop_prefs).
 			pluggable_ui('yab_shop', 'checkout_form_order_button', graf(
-				fInput('submit', 'order', yab_shop_lang('checkout_order'), 'submit'),
+				fInput('submit', 'order', gTxt('yab_shop_checkout_order'), 'submit'),
 			' class="submit"'
 			), $yab_shop_prefs)
-		),'form', ' method="post" action="'.yab_shop_mlp_inject( pagelinkurl(array('s' => yab_shop_config('checkout_section_name')))).'#yab-shop-checkout-anchor" id="yab-checkout-form"'
+		),'form', ' method="post" action="'.pagelinkurl(array('s' => yab_shop_config('checkout_section_name'))).'#yab-shop-checkout-anchor" id="yab-checkout-form"'
 	);
 
 	return $form;
@@ -1448,9 +1446,9 @@ function yab_shop_build_checkout_table($cart, $summary, $no_change = false)
 	$tax_inclusive = yab_shop_config('tax_inclusive');
 
 	$checkout_display = tr(
-		tag(yab_shop_lang('table_caption_content'), 'th').
-		tag(yab_shop_lang('table_caption_change'), 'th', ' class="yab-checkout-change"').
-		tag(yab_shop_lang('table_caption_price'), 'th', ' class="yab-checkout-price"')
+		tag(gTxt('yab_shop_table_caption_content'), 'th').
+		tag(gTxt('yab_shop_table_caption_change'), 'th', ' class="yab-checkout-change"').
+		tag(gTxt('yab_shop_table_caption_price'), 'th', ' class="yab-checkout-price"')
 	).n;
 
 	$class = '';
@@ -1470,10 +1468,10 @@ function yab_shop_build_checkout_table($cart, $summary, $no_change = false)
 			td(
 				yab_shop_checkout_image($item['txpid']).href($item['name'], permlinkurl_id($item['txpid'])).
 				tag(
-				yab_shop_build_checkout_customs($item['property_1'], yab_shop_lang('custom_field_property_1'), yab_shop_config('custom_field_property_1_name')).
-				yab_shop_build_checkout_customs($item['property_2'], yab_shop_lang('custom_field_property_2'), yab_shop_config('custom_field_property_2_name')).
-				yab_shop_build_checkout_customs($item['property_3'], yab_shop_lang('custom_field_property_3'), yab_shop_config('custom_field_property_3_name')).
-				yab_shop_build_checkout_customs($item_price, yab_shop_lang('price'), yab_shop_config('custom_field_price_name'))
+				yab_shop_build_checkout_customs($item['property_1'], gTxt('yab_shop_custom_field_property_1'), yab_shop_config('custom_field_property_1_name')).
+				yab_shop_build_checkout_customs($item['property_2'], gTxt('yab_shop_custom_field_property_2'), yab_shop_config('custom_field_property_2_name')).
+				yab_shop_build_checkout_customs($item['property_3'], gTxt('yab_shop_custom_field_property_3'), yab_shop_config('custom_field_property_3_name')).
+				yab_shop_build_checkout_customs($item_price, gTxt('yab_shop_price'), yab_shop_config('custom_field_price_name'))
 				, 'ul')
 			).
 			td($out_qty, '', 'yab-checkout-change').
@@ -1488,22 +1486,22 @@ function yab_shop_build_checkout_table($cart, $summary, $no_change = false)
 	if ($tax_inclusive == '0')
 	{
 		$checkout_display .= tr(
-			tda(yab_shop_lang('sub_total'), ' colspan="2"').
+			tda(gTxt('yab_shop_sub_total'), ' colspan="2"').
 			tda(yab_shop_currency_out(yab_shop_config('currency'), 'cur').yab_shop_currency_out(yab_shop_config('currency'), 'toform', $cart->total), ' class="yab-checkout-sum"'),
 			' class="yab-checkout-subtotal"'
 		).n;
 		$checkout_display .= tr(
-			tda(yab_shop_lang('checkout_tax_exclusive'), ' colspan="2"').
+			tda(gTxt('yab_shop_checkout_tax_exclusive'), ' colspan="2"').
 			tda(yab_shop_currency_out(yab_shop_config('currency'), 'cur').yab_shop_currency_out(yab_shop_config('currency'), 'toform', yab_shop_calculate_sum('tax')), ' class="yab-checkout-sum"'),
 			' class="yab-checkout-tax"'
 		).n;
 		$checkout_display .= tr(
-			tda(yab_shop_lang('shipping_costs') . (($ship_data['shipping_options']) ? sp. $ship_data['shipping_options'] : ''), ' colspan="2"').
+			tda(gTxt('yab_shop_shipping_costs') . (($ship_data['shipping_options']) ? sp. $ship_data['shipping_options'] : ''), ' colspan="2"').
 			tda(yab_shop_currency_out(yab_shop_config('currency'), 'cur').yab_shop_currency_out(yab_shop_config('currency'), 'toform', $shipping_costs), ' class="yab-checkout-sum"'),
 			' class="yab-checkout-shipping"'
 		).n;
 		$checkout_display .= tr(
-			tda(yab_shop_lang('grand_total'), ' colspan="2"').
+			tda(gTxt('yab_shop_grand_total'), ' colspan="2"').
 			tda(yab_shop_currency_out(yab_shop_config('currency'), 'cur').yab_shop_currency_out(yab_shop_config('currency'), 'toform', yab_shop_calculate_sum('brutto') + $tax_shipping_costs), ' class="yab-checkout-sum"'),
 			' class="yab-checkout-total"'
 		);
@@ -1511,22 +1509,22 @@ function yab_shop_build_checkout_table($cart, $summary, $no_change = false)
 	else
 	{
 		$checkout_display .= tr(
-			tda(yab_shop_lang('sub_total'), ' colspan="2"').
+			tda(gTxt('yab_shop_sub_total'), ' colspan="2"').
 			tda(yab_shop_currency_out(yab_shop_config('currency'), 'cur').yab_shop_currency_out(yab_shop_config('currency'), 'toform', $cart->total), ' class="yab-checkout-sum"'),
 			' class="yab-checkout-subtotal"'
 		).n;
 		$checkout_display .= tr(
-			tda(yab_shop_lang('shipping_costs') . (($ship_data['shipping_options']) ? sp . $ship_data['shipping_options'] : ''), ' colspan="2"').
+			tda(gTxt('yab_shop_shipping_costs') . (($ship_data['shipping_options']) ? sp . $ship_data['shipping_options'] : ''), ' colspan="2"').
 			tda(yab_shop_currency_out(yab_shop_config('currency'), 'cur').yab_shop_currency_out(yab_shop_config('currency'), 'toform', $shipping_costs), ' class="yab-checkout-sum"'),
 			' class="yab-checkout-shipping"'
 		).n;
 		$checkout_display .= tr(
-			tda(yab_shop_lang('grand_total'), ' colspan="2"').
+			tda(gTxt('yab_shop_grand_total'), ' colspan="2"').
 			tda(yab_shop_currency_out(yab_shop_config('currency'), 'cur').yab_shop_currency_out(yab_shop_config('currency'), 'toform', $cart->total + $tax_shipping_costs), ' class="yab-checkout-sum"'),
 			' class="yab-checkout-total"'
 		).n;
 		$checkout_display .= tr(
-			tda(yab_shop_lang('checkout_tax_inclusive'), ' colspan="2"').
+			tda(gTxt('yab_shop_checkout_tax_inclusive'), ' colspan="2"').
 			tda(yab_shop_currency_out(yab_shop_config('currency'), 'cur').yab_shop_currency_out(yab_shop_config('currency'), 'toform', yab_shop_calculate_sum('tax')), ' class="yab-checkout-sum"'),
 			' class="yab-checkout-tax"'
 		);
@@ -1544,20 +1542,20 @@ function yab_shop_build_cart($cart)
 		foreach ($cart->get_contents() as $item)
 		{
 			$cart_display .= tag(
-				href($item['name'], yab_shop_mlp_inject(permlinkurl_id($item['txpid']))).
+				href($item['name'], permlinkurl_id($item['txpid'])).
 				tag(
-					tag(yab_shop_lang('price').':&nbsp;'.yab_shop_currency_out(yab_shop_config('currency'), 'cur').yab_shop_currency_out(yab_shop_config('currency'), 'toform', $item['price']), 'li', ' class="yab-price"').
-						tag(yab_shop_lang('quantity').':&nbsp;'.$item['qty'], 'li', ' class="yab-qty"'),
+					tag(gTxt('yab_shop_price').':&nbsp;'.yab_shop_currency_out(yab_shop_config('currency'), 'cur').yab_shop_currency_out(yab_shop_config('currency'), 'toform', $item['price']), 'li', ' class="yab-price"').
+						tag(gTxt('yab_shop_quantity').':&nbsp;'.$item['qty'], 'li', ' class="yab-qty"'),
 				'ul'),
 			'li', ' class="yab-item"');
 		}
 		$cart_display = tag($cart_display, 'ul', ' class="yab-cart"');
-		$cart_display .= tag(yab_shop_lang('sub_total').':&nbsp;'.yab_shop_currency_out(yab_shop_config('currency'), 'cur').yab_shop_currency_out(yab_shop_config('currency'), 'toform', $cart->total), 'span', ' class="yab-subtotal"');
-		$cart_display .= tag(yab_shop_lang('to_checkout'), 'a', ' href="'.yab_shop_mlp_inject(pagelinkurl(array('s' => yab_shop_config('checkout_section_name')))).'" title="'.yab_shop_lang('to_checkout').'" class="yab-to-checkout"');
+		$cart_display .= tag(gTxt('yab_shop_sub_total').':&nbsp;'.yab_shop_currency_out(yab_shop_config('currency'), 'cur').yab_shop_currency_out(yab_shop_config('currency'), 'toform', $cart->total), 'span', ' class="yab-subtotal"');
+		$cart_display .= tag(gTxt('yab_shop_to_checkout'), 'a', ' href="'.pagelinkurl(array('s' => yab_shop_config('checkout_section_name'))).'" title="'.gTxt('yab_shop_to_checkout').'" class="yab-to-checkout"');
 	}
 	else
 	{
-		$cart_display = tag(yab_shop_lang('empty_cart'), 'span', ' class="yab-empty"');
+		$cart_display = tag(gTxt('yab_shop_empty_cart'), 'span', ' class="yab-empty"');
 	}
 	return $cart_display;
 }
@@ -1592,11 +1590,11 @@ function yab_shop_build_mail_body($cart, $ps_order, $affirmation = '0')
 	$promo_client = '';
 	if ($cart->get_promocode() != NULL)
 	{
-		$promo_admin = yab_shop_lang('admin_mail_promocode');
-		$promo_client = yab_shop_lang('affirmation_mail_promocode');
+		$promo_admin = gTxt('yab_shop_admin_mail_promocode');
+		$promo_client = gTxt('yab_shop_affirmation_mail_promocode');
 	}
 
-	$yab_shop_mail_info['body']['pre_products'] = ($affirmation == '1') ? yab_shop_lang('affirmation_mail_pre_products') : yab_shop_lang('admin_mail_pre_products');
+	$yab_shop_mail_info['body']['pre_products'] = ($affirmation == '1') ? gTxt('yab_shop_affirmation_mail_pre_products') : gTxt('yab_shop_admin_mail_pre_products');
 
 	if (!$body_form) {
 		$body .= $yab_shop_mail_info['body']['pre_products'].$eol;
@@ -1604,10 +1602,10 @@ function yab_shop_build_mail_body($cart, $ps_order, $affirmation = '0')
 
 	$state = $country = '';
 	if (yab_shop_config('using_checkout_state') == '1')
-		$state = yab_shop_lang('checkout_state').': '.$ps_order['state'.$req_matrix['state']['mod']];
+		$state = gTxt('yab_shop_checkout_state').': '.$ps_order['state'.$req_matrix['state']['mod']];
 
 	if (yab_shop_config('using_checkout_country') == '1')
-		$country = yab_shop_lang('checkout_country').': '.$ps_order['country'.$req_matrix['country']['mod']];
+		$country = gTxt('yab_shop_checkout_country').': '.$ps_order['country'.$req_matrix['country']['mod']];
 
 	$yab_shop_mail_info['body']['state'] = $state;
 	$yab_shop_mail_info['body']['country'] = $country;
@@ -1621,33 +1619,33 @@ function yab_shop_build_mail_body($cart, $ps_order, $affirmation = '0')
 	$yab_shop_mail_info['body']['payment'] = $ps_order['payment'];
 	$yab_shop_mail_info['body']['message'] = $ps_order['message'];
 
-	$yab_shop_mail_info['label']['state'] = yab_shop_lang('checkout_state');
-	$yab_shop_mail_info['label']['country'] = yab_shop_lang('checkout_country');
-	$yab_shop_mail_info['label']['firstname'] = yab_shop_lang('checkout_firstname');
-	$yab_shop_mail_info['label']['surname'] = yab_shop_lang('checkout_surname');
-	$yab_shop_mail_info['label']['street'] = yab_shop_lang('checkout_street');
-	$yab_shop_mail_info['label']['city'] = yab_shop_lang('checkout_city');
-	$yab_shop_mail_info['label']['postal'] = yab_shop_lang('checkout_postal');
-	$yab_shop_mail_info['label']['phone'] = yab_shop_lang('checkout_phone');
-	$yab_shop_mail_info['label']['email'] = yab_shop_lang('checkout_email');
-	$yab_shop_mail_info['label']['payment'] = yab_shop_lang('checkout_payment');
-	$yab_shop_mail_info['label']['message'] = yab_shop_lang('checkout_message');
-	$yab_shop_mail_info['label']['property_1'] = yab_shop_lang('custom_field_property_1');
-	$yab_shop_mail_info['label']['property_2'] = yab_shop_lang('custom_field_property_2');
-	$yab_shop_mail_info['label']['property_3'] = yab_shop_lang('custom_field_property_3');
+	$yab_shop_mail_info['label']['state'] = gTxt('yab_shop_checkout_state');
+	$yab_shop_mail_info['label']['country'] = gTxt('yab_shop_checkout_country');
+	$yab_shop_mail_info['label']['firstname'] = gTxt('yab_shop_checkout_firstname');
+	$yab_shop_mail_info['label']['surname'] = gTxt('yab_shop_checkout_surname');
+	$yab_shop_mail_info['label']['street'] = gTxt('yab_shop_checkout_street');
+	$yab_shop_mail_info['label']['city'] = gTxt('yab_shop_checkout_city');
+	$yab_shop_mail_info['label']['postal'] = gTxt('yab_shop_checkout_postal');
+	$yab_shop_mail_info['label']['phone'] = gTxt('yab_shop_checkout_phone');
+	$yab_shop_mail_info['label']['email'] = gTxt('yab_shop_checkout_email');
+	$yab_shop_mail_info['label']['payment'] = gTxt('yab_shop_checkout_payment');
+	$yab_shop_mail_info['label']['message'] = gTxt('yab_shop_checkout_message');
+	$yab_shop_mail_info['label']['property_1'] = gTxt('yab_shop_custom_field_property_1');
+	$yab_shop_mail_info['label']['property_2'] = gTxt('yab_shop_custom_field_property_2');
+	$yab_shop_mail_info['label']['property_3'] = gTxt('yab_shop_custom_field_property_3');
 
 	if (!$body_form) {
 		$body .=
-			$eol.yab_shop_lang('checkout_firstname').': '.$yab_shop_mail_info['body']['firstname'].
-			$eol.yab_shop_lang('checkout_surname').': '.$yab_shop_mail_info['body']['surname'].
-			$eol.yab_shop_lang('checkout_street').': '.$yab_shop_mail_info['body']['street'].
-			$eol.yab_shop_lang('checkout_city').': '.$yab_shop_mail_info['body']['city'].
-			$eol.yab_shop_lang('checkout_postal').': '.$yab_shop_mail_info['body']['postal'].
+			$eol.gTxt('yab_shop_checkout_firstname').': '.$yab_shop_mail_info['body']['firstname'].
+			$eol.gTxt('yab_shop_checkout_surname').': '.$yab_shop_mail_info['body']['surname'].
+			$eol.gTxt('yab_shop_checkout_street').': '.$yab_shop_mail_info['body']['street'].
+			$eol.gTxt('yab_shop_checkout_city').': '.$yab_shop_mail_info['body']['city'].
+			$eol.gTxt('yab_shop_checkout_postal').': '.$yab_shop_mail_info['body']['postal'].
 			(($state) ? $eol.$state : '') . (($country) ? $eol.$country : '').
-			$eol.yab_shop_lang('checkout_phone').': '.$yab_shop_mail_info['body']['phone'].
-			$eol.yab_shop_lang('checkout_email').': '.$yab_shop_mail_info['body']['email'].
-			$eol.yab_shop_lang('checkout_payment').': '.$yab_shop_mail_info['body']['payment'].
-			$eol.yab_shop_lang('checkout_message').': '.$yab_shop_mail_info['body']['message'].$eol;
+			$eol.gTxt('yab_shop_checkout_phone').': '.$yab_shop_mail_info['body']['phone'].
+			$eol.gTxt('yab_shop_checkout_email').': '.$yab_shop_mail_info['body']['email'].
+			$eol.gTxt('yab_shop_checkout_payment').': '.$yab_shop_mail_info['body']['payment'].
+			$eol.gTxt('yab_shop_checkout_message').': '.$yab_shop_mail_info['body']['message'].$eol;
 		$body .= $eol.$line_1.$eol;
 	}
 
@@ -1670,9 +1668,9 @@ function yab_shop_build_mail_body($cart, $ps_order, $affirmation = '0')
 		} else {
 			$items[] = $eol.$item['name'].
 				$eol.$item['qty'].' x '.$yab_shop_mail_info['item']['price'].' = '.$yab_shop_mail_info['item']['price_sum'].$eol.
-				yab_shop_build_mail_customs($item['property_1'], yab_shop_lang('custom_field_property_1'), $eol).
-				yab_shop_build_mail_customs($item['property_2'], yab_shop_lang('custom_field_property_2'), $eol).
-				yab_shop_build_mail_customs($item['property_3'], yab_shop_lang('custom_field_property_3'), $eol);
+				yab_shop_build_mail_customs($item['property_1'], gTxt('yab_shop_custom_field_property_1'), $eol).
+				yab_shop_build_mail_customs($item['property_2'], gTxt('yab_shop_custom_field_property_2'), $eol).
+				yab_shop_build_mail_customs($item['property_3'], gTxt('yab_shop_custom_field_property_3'), $eol);
 		}
 	}
 
@@ -1684,15 +1682,15 @@ function yab_shop_build_mail_body($cart, $ps_order, $affirmation = '0')
 	$yab_shop_mail_info['body']['sub_total'] = yab_shop_config('currency').' '.yab_shop_currency_out(yab_shop_config('currency'), 'toform', $cart->total);
 	$yab_shop_mail_info['body']['shipping'] = yab_shop_config('currency').' '.yab_shop_currency_out(yab_shop_config('currency'), 'toform', $shipping);
 
-	$yab_shop_mail_info['label']['grand_total'] = yab_shop_lang('grand_total');
-	$yab_shop_mail_info['label']['shipping_costs'] = yab_shop_lang('shipping_costs');
-	$yab_shop_mail_info['label']['sub_total'] = yab_shop_lang('sub_total');
+	$yab_shop_mail_info['label']['grand_total'] = gTxt('yab_shop_grand_total');
+	$yab_shop_mail_info['label']['shipping_costs'] = gTxt('yab_shop_shipping_costs');
+	$yab_shop_mail_info['label']['sub_total'] = gTxt('yab_shop_sub_total');
 
 	if (yab_shop_config('tax_inclusive') == '0')
 	{
 		$yab_shop_mail_info['body']['grand_total'] = yab_shop_config('currency').' '.yab_shop_currency_out(yab_shop_config('currency'), 'toform', yab_shop_calculate_sum('brutto') + $tax_shipping);
 		$yab_shop_mail_info['body']['tax'] = 0;
-		$yab_shop_mail_info['label']['tax_system'] = yab_shop_lang('checkout_tax_exclusive');
+		$yab_shop_mail_info['label']['tax_system'] = gTxt('yab_shop_checkout_tax_exclusive');
 
 		if (!$body_form) {
 			$body .= $eol.$line_1.
@@ -1708,7 +1706,7 @@ function yab_shop_build_mail_body($cart, $ps_order, $affirmation = '0')
 	{
 		$yab_shop_mail_info['body']['grand_total'] = yab_shop_config('currency').' '.yab_shop_currency_out(yab_shop_config('currency'), 'toform', $cart->total + $tax_shipping);
 		$yab_shop_mail_info['body']['tax'] = yab_shop_config('currency').' '.yab_shop_currency_out(yab_shop_config('currency'), 'toform', yab_shop_calculate_sum('tax'));
-		$yab_shop_mail_info['label']['tax_system'] = yab_shop_lang('checkout_tax_inclusive');
+		$yab_shop_mail_info['label']['tax_system'] = gTxt('yab_shop_checkout_tax_inclusive');
 
 		if (!$body_form) {
 			$body .= $eol.$line_1.
@@ -1721,7 +1719,7 @@ function yab_shop_build_mail_body($cart, $ps_order, $affirmation = '0')
 		}
 	}
 
-	$yab_shop_mail_info['body']['after_products'] = ($affirmation == '1') ? yab_shop_lang('affirmation_mail_after_products') : yab_shop_lang('admin_mail_after_products');
+	$yab_shop_mail_info['body']['after_products'] = ($affirmation == '1') ? gTxt('yab_shop_affirmation_mail_after_products') : gTxt('yab_shop_admin_mail_after_products');
 	$yab_shop_mail_info['body']['promo'] = ($affirmation == '1') ? $promo_client : $promo_admin;
 
 	if (!$body_form) {
@@ -1889,38 +1887,38 @@ function yab_shop_checkout_payment_methods()
 	$select = '';
 	$content = '';
 	$hidden_value = '';
-	$label = tag(yab_shop_lang('checkout_payment'), 'label', ' for="payment"');
+	$label = tag(gTxt('yab_shop_checkout_payment'), 'label', ' for="payment"');
 	$b = 0;
 
 	if (yab_shop_config('payment_method_acc') == '1')
 	{
 		$b++;
-		$hidden_value .= yab_shop_lang('checkout_payment_acc');
-		$option .= tag(yab_shop_lang('checkout_payment_acc'), 'option', ' value="'.yab_shop_lang('checkout_payment_acc').'"');
+		$hidden_value .= gTxt('yab_shop_checkout_payment_acc');
+		$option .= tag(gTxt('yab_shop_checkout_payment_acc'), 'option', ' value="'.gTxt('yab_shop_checkout_payment_acc').'"');
 	}
 	if (yab_shop_config('payment_method_pod') == '1')
 	{
 		$b++;
-		$hidden_value .= yab_shop_lang('checkout_payment_pod');
-		$option .= tag(yab_shop_lang('checkout_payment_pod'), 'option', ' value="'.yab_shop_lang('checkout_payment_pod').'"');
+		$hidden_value .= gTxt('yab_shop_checkout_payment_pod');
+		$option .= tag(gTxt('yab_shop_checkout_payment_pod'), 'option', ' value="'.gTxt('yab_shop_checkout_payment_pod').'"');
 	}
 	if (yab_shop_config('payment_method_pre') == '1')
 	{
 		$b++;
-		$hidden_value .= yab_shop_lang('checkout_payment_pre');
-		$option .= tag(yab_shop_lang('checkout_payment_pre'), 'option', ' value="'.yab_shop_lang('checkout_payment_pre').'"');
+		$hidden_value .= gTxt('yab_shop_checkout_payment_pre');
+		$option .= tag(gTxt('yab_shop_checkout_payment_pre'), 'option', ' value="'.gTxt('yab_shop_checkout_payment_pre').'"');
 	}
 	if (yab_shop_config('payment_method_paypal') == '1')
 	{
 		$b++;
-		$hidden_value .= yab_shop_lang('checkout_payment_paypal');
-		$option .= tag(yab_shop_lang('checkout_payment_paypal'), 'option', ' value="'.yab_shop_lang('checkout_payment_paypal').'"');
+		$hidden_value .= gTxt('yab_shop_checkout_payment_paypal');
+		$option .= tag(gTxt('yab_shop_checkout_payment_paypal'), 'option', ' value="'.gTxt('yab_shop_checkout_payment_paypal').'"');
 	}
 	if (yab_shop_config('payment_method_google') == '1')
 	{
 		$b++;
-		$hidden_value .= yab_shop_lang('checkout_payment_google');
-		$option .= tag(yab_shop_lang('checkout_payment_google'), 'option', ' value="'.yab_shop_lang('checkout_payment_google').'"');
+		$hidden_value .= gTxt('yab_shop_checkout_payment_google');
+		$option .= tag(gTxt('yab_shop_checkout_payment_google'), 'option', ' value="'.gTxt('yab_shop_checkout_payment_google').'"');
 	}
 
 	if ($b == 0)
@@ -1950,10 +1948,10 @@ function yab_shop_checkout_qty_edit($itemid, $qty)
 			tag(
 				hInput('editid', $itemid).
 				fInput('text','editqty',$qty,'','','','1').
-				fInput('submit','edit',yab_shop_lang('checkout_edit'), 'submit-edit').
-				fInput('submit','del',yab_shop_lang('checkout_delete'), 'submit-del'),
+				fInput('submit','edit',gTxt('yab_shop_checkout_edit'), 'submit-edit').
+				fInput('submit','del',gTxt('yab_shop_checkout_delete'), 'submit-del'),
 			'div'),
-	'form', ' method="post" action="'.yab_shop_mlp_inject(pagelinkurl(array('s' => yab_shop_config('checkout_section_name')))).'"'
+	'form', ' method="post" action="'.pagelinkurl(array('s' => yab_shop_config('checkout_section_name'))).'"'
 	);
 	return $edit_form;
 }
@@ -2076,7 +2074,7 @@ function yab_shop_available_shipping_options()
 	}
 
 	if ($num_shipping_bands > 1) {
-		$shipping_options = '<form method="post" id="yab-ship-method" action="'.yab_shop_mlp_inject(pagelinkurl(array('s' => yab_shop_config('checkout_section_name')))).'" name="edit_ship_method"><select name="shipping_band" onchange="this.form.submit()">' . $shipping_options .'</select></form>';
+		$shipping_options = '<form method="post" id="yab-ship-method" action="'.pagelinkurl(array('s' => yab_shop_config('checkout_section_name'))).'" name="edit_ship_method"><select name="shipping_band" onchange="this.form.submit()">' . $shipping_options .'</select></form>';
 	}
 
 	if (yab_shop_config('custom_field_shipping_name') != '')
@@ -2098,7 +2096,7 @@ function yab_shop_available_shipping_options()
 
 	// No valid shipping options available at all? Say so
 	if ($disabled_methods >= $num_shipping_bands) {
-		$shipping_options = yab_shop_lang('please_call');
+		$shipping_options = gTxt('yab_shop_please_call');
 		$shipping_costs = 'NA';
 	}
 
@@ -2107,7 +2105,7 @@ function yab_shop_available_shipping_options()
 	// method they choose
 	if ($sub_total >= $free_shipping) {
 		$shipping_costs = 0.00;
-		$shipping_options = yab_shop_lang('checkout_free_shipping');
+		$shipping_options = gTxt('yab_shop_checkout_free_shipping');
 		$out['method_available'] = true; // hack
 	}
 
@@ -2300,7 +2298,7 @@ function yab_shop_currency_out($currency, $what, $toform = '')
 		case 'UNAVAILABLE':
 			$out = array(
 				'cur'    => '',
-				'toform' => yab_shop_lang('value_unavailable'),
+				'toform' => gTxt('yab_shop_value_unavailable'),
 			);
 			break;
 		default:
@@ -2429,33 +2427,33 @@ function yab_build_promo_input($cart)
 		if ($pcode != '')
 		{
 			if (in_array($pcode, do_list(yab_shop_config('promocode'))))
-				$out .= graf(yab_shop_lang('promocode_success'), ' class="yab-shop-notice yab-promo-success"');
+				$out .= graf(gTxt('yab_shop_promocode_success'), ' class="yab-shop-notice yab-promo-success"');
 			else
 			{
-				$out .= graf(yab_shop_lang('promocode_error'), ' class="yab-shop-notice yab-promo-error"').
+				$out .= graf(gTxt('yab_shop_promocode_error'), ' class="yab-shop-notice yab-promo-error"').
 								tag(
 									graf(
-										tag(yab_shop_lang('promocode_label'), 'label', ' for="yab-promo"').
+										tag(gTxt('yab_shop_promocode_label'), 'label', ' for="yab-promo"').
 											fInput('text','yab-promo','','','','','','','yab-promo').
-											fInput('submit','',yab_shop_lang('promocode_button'), 'yab-promo-submit'),
+											fInput('submit','',gTxt('yab_shop_promocode_button'), 'yab-promo-submit'),
 										' class="yab-promocode"'),
-									'form', ' method="post" action="'.yab_shop_mlp_inject(pagelinkurl(array('s' => yab_shop_config('checkout_section_name')))).'"'
+									'form', ' method="post" action="'.pagelinkurl(array('s' => yab_shop_config('checkout_section_name'))).'"'
 								);
 			}
 		}
 		else
 		{
 			if ($cart->get_promocode() != NULL)
-				$out .= graf(yab_shop_lang('promocode_success'), ' class="yab-shop-notice yab-promo-success"');
+				$out .= graf(gTxt('yab_shop_promocode_success'), ' class="yab-shop-notice yab-promo-success"');
 			else
 			{
 				$out .= tag(
 					graf(
-						tag(yab_shop_lang('promocode_label'), 'label', ' for="yab-promo"').
+						tag(gTxt('yab_shop_promocode_label'), 'label', ' for="yab-promo"').
 						fInput('text','yab-promo','','','','','','','yab-promo').
-						fInput('submit','',yab_shop_lang('promocode_button'), 'yab-promo-submit'),
+						fInput('submit','',gTxt('yab_shop_promocode_button'), 'yab-promo-submit'),
 					' class="yab-promocode"'),
-				'form', ' method="post" action="'.yab_shop_mlp_inject(pagelinkurl(array('s' => yab_shop_config('checkout_section_name')))).'"'
+				'form', ' method="post" action="'.pagelinkurl(array('s' => yab_shop_config('checkout_section_name'))).'"'
 				);
 			}
 		}
@@ -2490,14 +2488,14 @@ function yab_remember_checkbox()
 		if ($forget == 1)
 			yab_shop_destroyCookies();
 
-		$checkbox = checkbox('forget', 1, $forget, '', 'yab-remember').tag(yab_shop_lang('forget_me'), 'label', ' for="yab-remember"');
+		$checkbox = checkbox('forget', 1, $forget, '', 'yab-remember').tag(gTxt('yab_shop_forget_me'), 'label', ' for="yab-remember"');
 	}
 	else
 	{
 		if ($remember != 1)
 			yab_shop_destroyCookies();
 
-		$checkbox = checkbox('remember', 1, $remember, '', 'yab-remember').tag(yab_shop_lang('remember_me'), 'label', ' for="yab-remember"');
+		$checkbox = checkbox('remember', 1, $remember, '', 'yab-remember').tag(gTxt('yab_shop_remember_me'), 'label', ' for="yab-remember"');
 	}
 
 	$checkbox .= ' '.hInput('checkbox_type', $checkbox_type);
@@ -2596,7 +2594,6 @@ function yab_shop_redirect($uri)
 {
 	if ($uri != '')
 	{
-		$uri = yab_shop_mlp_inject($uri);
 		txp_status_header('303 See Other');
 		header('Location: '.$uri);
 		header('Connection: close');
@@ -2608,27 +2605,7 @@ function yab_shop_redirect($uri)
 
 function yab_shop_cartname()
 {
-	$lang = yab_shop_mlp_select_lang();
-	return ($lang) ? 'wfcart_'.$lang : 'wfcart' ;
-}
-
-#===============================================================================
-#
-#	MLP Pack integration. Inject the l10n language (if known)...
-#
-#===============================================================================
-function yab_shop_mlp_select_lang( $default = '', $type = 'short' )
-{
-	global $l10n_language;
-	$out = ( isset($l10n_language) ) ? $l10n_language[$type] : $default ;
-	return $out;
-}
-
-function yab_shop_mlp_inject($in)
-{
-	global $l10n_language;
-	$out = ( isset($l10n_language) ) ? strtr($in, array( hu => hu.$l10n_language['short'].'/' ) ) : $in ;
-	return $out;
+	return 'wfcart' ;
 }
 
 # --- END PLUGIN CODE ---
@@ -2727,7 +2704,7 @@ Removed. Now load the jquery.js manually please!</li>
 	<p>Further you have to create at least one additional custom field, where you can store the price for the products. So create one and name it.<br />
 Place the used name in Yab_Shop Preferences. Now you can create up to three addtional custom fields if you want multiple product properties.</p>
 
-	<p>Next you have to configure your shop. So go <a href="?event=yab_shop_prefs">Yab_Shop Preferences</a> which contains the configuration and go <a href="?event=yab_shop_language">Yab_Shop L10n</a> which contains the phrases where you can change on your own. See the <a href="?event=plugin&amp;step=plugin_help&amp;name=yab_shop_admin">yab_shop_admin plugin help</a> for further information.</p>
+	<p>Next you have to configure your shop. So go <a href="?event=yab_shop_prefs">Yab_Shop Preferences</a> which contains the configuration. See the <a href="?event=plugin&amp;step=plugin_help&amp;name=yab_shop_admin">yab_shop_admin plugin help</a> for further information.</p>
 
 	<p>For paypal and google checkout setup see <a href="?event=plugin&amp;step=plugin_help&amp;name=yab_shop_admin">plugin help for yab_shop_config</a> or a <a href="http://forum.textpattern.com/viewtopic.php?pid=205495#p205495">thread in the forum</a></p>
 

@@ -17,7 +17,7 @@ $plugin['name'] = 'yab_shop_3rd_party';
 // 1 = Plugin help is in raw HTML.  Not recommended.
 # $plugin['allow_html_help'] = 1;
 
-$plugin['version'] = '0.9.0';
+$plugin['version'] = '0.9.1';
 $plugin['author'] = 'Tommy Schmucker';
 $plugin['author_uri'] = 'http://www.yablo.de/';
 $plugin['description'] = 'Shopping Cart Plugin (3rd party classes)';

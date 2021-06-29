@@ -17,7 +17,7 @@ $plugin['name'] = 'yab_shop_admin';
 // 1 = Plugin help is in raw HTML.  Not recommended.
 # $plugin['allow_html_help'] = 1;
 
-$plugin['version'] = '0.9.0';
+$plugin['version'] = '0.9.1';
 $plugin['author'] = 'Tommy Schmucker';
 $plugin['author_uri'] = 'http://www.yablo.de/';
 $plugin['description'] = 'Shopping Cart Plugin (Admin UI)';
@@ -54,231 +54,159 @@ $plugin['flags'] = '0';
 // #@language ISO-LANGUAGE-CODE
 // abc_string_name => Localized String
 
-/** Uncomment me, if you need a textpack
 $plugin['textpack'] = <<< EOT
-#@admin
-#@language en-gb
-abc_sample_string => Sample String
-abc_one_more => One more
-#@language de-de
-abc_sample_string => Beispieltext
-abc_one_more => Noch einer
+#@language en, en-gb, en-us
+#@owner yab_shop
+#@yab_shop_prefs
+yab_shop_common_prefs => Yab_Shop common preferences
+yab_shop_tax_rate => Tax bands (in %, pipe-delimited)
+yab_shop_shipping_costs => Shipping costs (fixed value or weight-table)
+yab_shop_shipping_via => Shipping via (Used by Google Checkout)
+yab_shop_free_shipping => Free shipping at
+yab_shop_currency => Currency (ISO 4717)
+yab_shop_promocode => Promocode key(s) (comma-delimited)
+yab_shop_promo_discount_percent => Promo discounts (%, comma-delimited: one per promocode)
+yab_shop_tax_inclusive => Tax inclusive (otherwise exclusive)
+yab_shop_payment_method_acc => Use payment method: Purchase on account
+yab_shop_payment_method_pod => Use payment method: Purchase on delivery
+yab_shop_payment_method_pre => Use payment method: Purchase against prepayment
+yab_shop_payment_method_paypal => Use payment method: Paypal checkout
+yab_shop_payment_method_google => Use payment method: Google checkout
+yab_shop_using_checkout_state => Use state field in checkout form
+yab_shop_using_checkout_country => Use country field in checkout form
+yab_shop_using_tou_checkbox => Use TOU checkbox in checkout form
+yab_shop_checkout_section_name => Name of the checkout section
+yab_shop_checkout_thanks_site => Checkout thank-you-site (Full URI)
+yab_shop_checkout_required_fields => List of required fields in checkout form
+yab_shop_back_to_shop_link => Back-to-shop-link (Full URI)
+yab_shop_custom_field_price_name => Name of the custom field price
+yab_shop_custom_field_property_1_name => Name of the custom field property 1
+yab_shop_custom_field_property_2_name => Name of the custom field property 2
+yab_shop_custom_field_property_3_name => Name of the custom field property 3
+yab_shop_custom_field_shipping_name => Name of the custom field special shipping costs
+yab_shop_custom_field_tax_band => Name of the custom field tax bands
+yab_shop_custom_field_weight => Name of the custom field product weight
+yab_shop_admin_mail => Admin Mail (Receives the orders)
+yab_shop_order_affirmation_mail => Send affirmation mail to buyers
+yab_shop_email_mime_type => MIME type of the affirmation / admin e-mail
+yab_shop_email_body_form => Textpattern form(s) for e-mail body layout
+yab_shop_use_property_prices => Use property prices
+yab_shop_use_checkout_images => Use images in checkout form
+yab_shop_paypal_prefs => Preferences for Paypal checkout
+yab_shop_use_encrypted_paypal_button => Use an encrypted Paypal button
+yab_shop_paypal_prefilled_country => Prefilled country in Paypal interface
+yab_shop_paypal_interface_language => Paypal interface language
+yab_shop_paypal_business_mail => Email of the Paypal business account
+yab_shop_paypal_live_or_sandbox => Live or sandbox
+yab_shop_paypal_certificate_id => Paypal certificate ID
+yab_shop_paypal_certificates_path => Path to Paypal certificate (absolute)
+yab_shop_paypal_public_certificate_name => Name of the public Paypal certificate
+yab_shop_paypal_my_public_certificate_name => Name of your public certificate
+yab_shop_paypal_my_private_key_name => Name of your private key
+yab_shop_google_prefs => Preferences for Google checkout
+yab_shop_google_live_or_sandbox => Live or sandbox
+yab_shop_google_merchant_id => Google merchant ID
+yab_shop_google_merchant_key => Google merchant key
+yab_shop_prefs => Yab_Shop Preferences
+yab_shop_prefs_updated => Yab_Shop preferences saved.
+yab_shop_tables_delete_error => Could not delete Yab_Shop database tables.
+yab_shop_tables_delete_success => Yab_Shop database tables deleted.
+yab_shop_klick_to_update => Click to upgrade Yab_Shop:
+#@public
+yab_shop_price => Price
+yab_shop_quantity => Quantity
+yab_shop_sub_total => Subtotal
+yab_shop_to_checkout => Proceed to Checkout
+yab_shop_empty_cart => No Items in Cart
+yab_shop_add_to_cart => Add to Cart
+yab_shop_table_caption_content => Content
+yab_shop_table_caption_change => Quantity
+yab_shop_table_caption_price => Price Sum
+yab_shop_custom_field_property_1 => Size
+yab_shop_custom_field_property_2 => Color
+yab_shop_custom_field_property_3 => Variant
+yab_shop_checkout_tax_exclusive => 20% Tax exclusive
+yab_shop_checkout_tax_inclusive => 20% Tax inclusive (where applicable)
+yab_shop_checkout_shipping_unavailable => Please choose a different shipping method.
+yab_shop_checkout_free_shipping => Free!
+yab_shop_shipping_costs => Shipping Costs
+yab_shop_grand_total => Total
+yab_shop_checkout_edit => Change Qty
+yab_shop_checkout_delete => x
+yab_shop_promocode_label => Promo code
+yab_shop_promocode_button => Apply
+yab_shop_promocode_error => Sorry, wrong promo code
+yab_shop_promocode_success => Promo code applied.
+yab_shop_checkout_required_field_notice => <p>If you do not already have an account, you may create one by choosing a login name in the form yab_shop_below. Having an account will entitle you to discount special offers and promotions, as well as being the first to get hold of the yab_shop_latest news and offers.</p><p>You can either enter your details below to save them with your account, or skip it and go straight to yab_shop_PayPal. Note that PayPal accept credit/debit cards too. If you have problems with the shop, please <a href="/contact">get in touch yab_shop_by e-mail</a> or call <txp:output_form form="phone_number" />.</p>
+yab_shop_checkout_firstname => First Name
+yab_shop_checkout_surname => Last Name
+yab_shop_checkout_street => Street
+yab_shop_checkout_postal => ZIP Code
+yab_shop_checkout_city => City
+yab_shop_checkout_state => State
+yab_shop_checkout_country => Country
+yab_shop_checkout_phone => Phone
+yab_shop_checkout_email => Email
+yab_shop_checkout_message => Message
+yab_shop_checkout_tou => Terms Of Use
+yab_shop_checkout_terms_of_use => I have read the <a href="/terms" title="Terms of Use">Terms of Use</a>
+yab_shop_checkout_summary => This table shows the cart with selected products and the total sum of the products.
+yab_shop_remember_me => Remember my data for next visit (cookie)
+yab_shop_forget_me => Forget my data
+yab_shop_checkout_order => Purchase/Order
+yab_shop_checkout_legend => Purchase Form
+yab_shop_checkout_payment_acc => Purchase on Account
+yab_shop_checkout_payment_pod => Purchase on Delivery
+yab_shop_checkout_payment_pre => Purchase against Prepayment
+yab_shop_checkout_payment_paypal => Purchase via Paypal
+yab_shop_checkout_payment_google => Purchase via Google Checkout
+yab_shop_checkout_payment => Payment Method
+yab_shop_checkout_paypal_forward => You will be forwarded to Paypal. Please wait&hellip;
+yab_shop_checkout_paypal_button => Go to paypal
+yab_shop_checkout_paypal_no_forward => Please click the button to proceed.
+yab_shop_paypal_return_message => Thank you for purchasing.
+yab_shop_checkout_google_forward => You will be forwarded to Google Checkout. Please wait&hellip;
+yab_shop_checkout_google_no_forward => Please click the button to proceed.
+yab_shop_checkout_history_back => Back to Shop
+yab_shop_checkout_mail_error => Your order could not be sent
+yab_shop_checkout_mail_success => Your order was successfully sent
+yab_shop_checkout_mail_email_error => Email is invalid
+yab_shop_checkout_mail_affirmation_error => Your order was successfully sent but a confirmation e-mail could not be delivered to you (perhaps you yab_shop_did not supply an e-mail address?)
+yab_shop_checkout_mail_affirmation_success => Your order and confirmation were successfully sent.
+yab_shop_checkout_mail_field_error => Please correctly fill out the following required fields:
+yab_shop_admin_mail_subject => Shop Order
+yab_shop_admin_mail_pre_products => The following was ordered:
+yab_shop_admin_mail_after_products => This text will be on the end of the admin mail
+yab_shop_admin_mail_promocode => The order is already calculated with promo discount
+yab_shop_affirmation_mail_subject => Your Shop Order
+yab_shop_affirmation_mail_pre_products => Thank you for shopping. Your order summary follows:
+yab_shop_affirmation_mail_after_products =>
+yab_shop_affirmation_mail_promocode => Your order is already calculated with promo discount
+yab_shop_cart_message_add => Product has been added
+yab_shop_cart_message_edit => Cart has been updated
+yab_shop_cart_message_del => Product has been deleted
+yab_shop_has_options_hint => More options available
+yab_shop_please_call => <strong>Please call</strong>
+yab_shop_value_unavailable => Unavailable
 EOT;
-**/
 // End of textpack
 
 if (!defined('txpinterface'))
         @include_once('zem_tpl.php');
 
 # --- BEGIN PLUGIN CODE ---
-class yab_shop_MLP {
-	var $strings;
-	var $owner;
-	var $prefix;
-	var $lang;
-	var $event;
-	function yab_shop_MLP($plug, $strarray, $prefx='', $lng='en-gb', $ev='public') {
-		$this->owner = $plug;
-		$this->prefix = (empty($prefx)) ? strtolower( strtr($plug, array('-'=>'_') ) ) : $prefx;
-		$this->strings = $strarray;
-		$this->lang = $lng;
-		$this->event = $ev;    // 'public', 'admin' or 'common'
-		register_callback(array(&$this, 'yab_shop_Callback'), 'l10n.enumerate_strings');
-	}
-	function yab_shop_Callback($event='l10n.enumerate_strings', $step='', $pre=0) {
-		$r = array(
-			'owner' => $this->owner,
-			'prefix' => $this->prefix,
-			'lang' => $this->lang,
-			'event' => $this->event,
-			'strings' => $this->strings,
-		);
-		return $r;
-	}
-	// Generic lookup
-	//  $what = key to look up
-	//  $args = any arguments the key is expecting for replacement
-	function gTxt($what, $args = array()) {
-		global $textarray;
-
-		// Prepare the prefixed key for use
-		$key = $this->prefix . '-' . $what;
-		$key = strtolower($key);
-
-		// Grab from the global textarray (possibly edited by MLP) if we can
-		if(isset($textarray[$key])) {
-			$str = $textarray[$key];
-		} else {
-			// The string isn't in the localised textarray so fallback to using
-			// the (non prefixed) string array in the plugin
-			$key = strtolower($what);
-			$str = (isset($this->strings[$key])) ? $this->strings[$key] : $what;
-		}
-		// Perform substitutions
-		if(!empty($args)) {
-			$str = strtr($str, $args);
-		}
-
-		return $str;
-	}
-}
-
-if (@txpinterface == 'admin')
-{
-  $_yab_shop_admin_i18n = array(
-    #
-		# Labels for the shop prefs page. No longer need the labels for the l10n
-		# page as the MLP pack takes care of that for free.
-		#
-		'shop_common_prefs'                 => 'Yab_Shop common preferences',
-		'tax_rate'                          => 'Tax bands (in %, pipe-delimited)',
-		'shipping_costs'                    => 'Shipping costs (fixed value or weight-table)',
-		'shipping_via'                      => 'Shipping via (Used by Google Checkout)',
-		'free_shipping'                     => 'Free shipping at',
-		'currency'                          => 'Currency (ISO 4717)',
-		'promocode'                         => 'Promocode key(s) (comma-delimited)',
-		'promo_discount_percent'            => 'Promo discounts (%, comma-delimited: one per promocode)',
-		'tax_inclusive'                     => 'Tax inclusive (otherwise exclusive)',
-		'payment_method_acc'                => 'Use payment method: Purchase on account',
-		'payment_method_pod'                => 'Use payment method: Purchase on delivery',
-		'payment_method_pre'                => 'Use payment method: Purchase against prepayment',
-		'payment_method_paypal'             => 'Use payment method: Paypal checkout',
-		'payment_method_google'             => 'Use payment method: Google checkout',
-		'using_checkout_state'              => 'Use state field in checkout form',
-		'using_checkout_country'            => 'Use country field in checkout form',
-		'using_tou_checkbox'                => 'Use TOU checkbox in checkout form',
-		'checkout_section_name'             => 'Name of the checkout section',
-		'checkout_thanks_site'              => 'Checkout thank-you-site (Full URI)',
-		'checkout_required_fields'          => 'List of required fields in checkout form',
-		'back_to_shop_link'                 => 'Back-to-shop-link (Full URI)',
-		'custom_field_price_name'           => 'Name of the custom field price',
-		'custom_field_property_1_name'      => 'Name of the custom field property 1',
-		'custom_field_property_2_name'      => 'Name of the custom field property 2',
-		'custom_field_property_3_name'      => 'Name of the custom field property 3',
-		'custom_field_shipping_name'        => 'Name of the custom field special shipping costs',
-		'custom_field_tax_band'             => 'Name of the custom field tax bands',
-		'custom_field_weight'               => 'Name of the custom field product weight',
-		'admin_mail'                        => 'Admin Mail (Receives the orders)',
-		'order_affirmation_mail'            => 'Send affirmation mail to buyers',
-		'email_mime_type'                   => 'MIME type of the affirmation / admin e-mail',
-		'email_body_form'                   => 'Textpattern form(s) for e-mail body layout',
-		'use_property_prices'               => 'Use property prices',
-		'use_checkout_images'               => 'Use images in checkout form',
-		'paypal_prefs'                      => 'Preferences for Paypal checkout',
-		'use_encrypted_paypal_button'       => 'Use an encrypted Paypal button',
-		'paypal_prefilled_country'          => 'Prefilled country in Paypal interface',
-		'paypal_interface_language'         => 'Paypal interface language',
-		'paypal_business_mail'              => 'Email of the Paypal business account',
-		'paypal_live_or_sandbox'            => 'Live or sandbox',
-		'paypal_certificate_id'             => 'Paypal certificate ID',
-		'paypal_certificates_path'          => 'Path to Paypal certificate (absolute)',
-		'paypal_public_certificate_name'    => 'Name of the public Paypal certificate',
-		'paypal_my_public_certificate_name' => 'Name of your public certificate',
-		'paypal_my_private_key_name'        => 'Name of your private key',
-		'google_prefs'                      => 'Preferences for Google checkout',
-		'google_live_or_sandbox'            => 'Live or sandbox',
-		'google_merchant_id'                => 'Google merchant ID',
-		'google_merchant_key'               => 'Google merchant key',
-		'shop_prefs'                        => 'Yab_Shop Preferences',
-		'prefs_updated'                     => 'Yab_Shop preferences saved.',
-		'tables_delete_error'               => 'Could not delete Yab_Shop database tables.',
-		'tables_delete_success'             => 'Yab_Shop database tables deleted.',
-		'klick_to_update'                   => 'Click to upgrade Yab_Shop:',
-		);
-
-	global $yab_shop_admin_lang;
-	$yab_shop_admin_lang = new yab_shop_MLP( 'yab_shop_admin', $_yab_shop_admin_i18n );
-
+if (txpinterface === 'admin') {
 	add_privs('yab_shop_prefs','1');
-	register_tab('extensions', 'yab_shop_prefs', yab_shop_admin_lang('shop_prefs'));
+	register_tab('extensions', 'yab_shop_prefs', gTxt('yab_shop_prefs'));
 	register_callback('yab_shop_prefs', 'yab_shop_prefs');
 }
 
-// define some prefs and language as globals
-global $yab_shop_prefs, $yab_shop_public_lang;
+// define some prefs as globals
+global $yab_shop_prefs;
 if (yab_shop_table_exist('yab_shop_prefs') === true)
 {
 	$yab_shop_prefs = yab_shop_get_prefs();
 }
-
-$_yab_shop_public_i18n = array(
-	'price'                             => 'Price',
-	'quantity'                          => 'Quantity',
-	'sub_total'                         => 'Subtotal',
-	'to_checkout'                       => 'Proceed to Checkout',
-	'empty_cart'                        => 'No Items in Cart',
-	'add_to_cart'                       => 'Add to Cart',
-	'table_caption_content'             => 'Content',
-	'table_caption_change'              => 'Quantity',
-	'table_caption_price'               => 'Price Sum',
-	'custom_field_property_1'           => 'Size',
-	'custom_field_property_2'           => 'Color',
-	'custom_field_property_3'           => 'Variant',
-	'checkout_tax_exclusive'            => '20% Tax exclusive',
-	'checkout_tax_inclusive'            => '20% Tax inclusive (where applicable)',
-	'checkout_shipping_unavailable'     => 'Please choose a different shipping method.',
-	'checkout_free_shipping'            => 'Free!',
-	'shipping_costs'                    => 'Shipping Costs',
-	'grand_total'                       => 'Total',
-	'checkout_edit'                     => 'Change Qty',
-	'checkout_delete'                   => 'x',
-	'promocode_label'                   => 'Promo code',
-	'promocode_button'                  => 'Apply',
-	'promocode_error'                   => 'Sorry, wrong promo code',
-	'promocode_success'                 => 'Promo code applied.',
-	'checkout_required_field_notice'    => '<p>If you do not already have an account, you may create one by choosing a login name in the form below. You may then log in using the boxes at the top of the page. Having an account will entitle you to discount special offers and promotions, as well as being the first to get hold of new books, guides and tips.</p><p>You can either enter your details below to save them with your account, or skip it and go straight to PayPal. Note that PayPal accept credit/debit cards too. If you have problems with the shop, please <a href="/contact">get in touch by e-mail</a> or call <txp:output_form form="phone_number" />.</p>',
-	'checkout_firstname'                => 'First Name',
-	'checkout_surname'                  => 'Last Name',
-	'checkout_street'                   => 'Street',
-	'checkout_postal'                   => 'ZIP Code',
-	'checkout_city'                     => 'City',
-	'checkout_state'                    => 'State',
-	'checkout_country'                  => 'Country',
-	'checkout_phone'                    => 'Phone',
-	'checkout_email'                    => 'Email',
-	'checkout_message'                  => 'Message',
-	'checkout_tou'                      => 'Terms Of Use',
-	'checkout_terms_of_use'             => 'I have read the <a href="http://site.com/terms" title="Terms of Use">Terms of Use</a>',
-	'checkout_summary'                  => 'This table shows the cart with selected products and the total sum of the products.',
-	'remember_me'                       => 'Remember my data for next visit (cookie)',
-	'forget_me'                         => 'Forget my data',
-	'checkout_order'                    => 'Purchase/Order',
-	'checkout_legend'                   => 'Purchase Form',
-	'checkout_payment_acc'              => 'Purchase on Account',
-	'checkout_payment_pod'              => 'Purchase on Delivery',
-	'checkout_payment_pre'              => 'Purchase against Prepayment',
-	'checkout_payment_paypal'           => 'Purchase via Paypal',
-	'checkout_payment_google'           => 'Purchase via Google Checkout',
-	'checkout_payment'                  => 'Payment Method',
-	'checkout_paypal_forward'           => 'You will be forwarded to Paypal. Please wait&hellip;',
-	'checkout_paypal_button'            => 'Go to paypal',
-	'checkout_paypal_no_forward'        => 'Please click the button to proceed.',
-	'paypal_return_message'             => 'Thank you for purchasing.',
-	'checkout_google_forward'           => 'You will be forwarded to Google Checkout. Please wait&hellip;',
-	'checkout_google_no_forward'        => 'Please click the button to proceed.',
-	'checkout_history_back'             => 'Back to Shop',
-	'checkout_mail_error'               => 'Your order could not be sent',
-	'checkout_mail_success'             => 'Your order was successfully sent',
-	'checkout_mail_email_error'         => 'Email is invalid',
-	'checkout_mail_affirmation_error'   => 'Your order was successfully sent but a confirmation e-mail could not be delivered to you (perhaps you did not supply an e-mail address?)',
-	'checkout_mail_affirmation_success' => 'Your order and confirmation were successfully sent.',
-	'checkout_mail_field_error'         => 'Please correctly fill out the following required fields:',
-	'admin_mail_subject'                => 'Shop Order',
-	'admin_mail_pre_products'           => 'The following was ordered:',
-	'admin_mail_after_products'         => 'This text will be on the end of the admin mail',
-	'admin_mail_promocode'              => 'The order is already calculated with promo discount',
-	'affirmation_mail_subject'          => 'Your Shop Order',
-	'affirmation_mail_pre_products'     => 'Thank you for shopping with LaidBackDogs.com. Your order summary follows:',
-	'affirmation_mail_after_products'   => '',
-	'affirmation_mail_promocode'        => 'Your order is already calculated with promo discount',
-	'cart_message_add'                  => 'Product has been added',
-	'cart_message_edit'                 => 'Cart has been updated',
-	'cart_message_del'                  => 'Product has been deleted',
-	'has_options_hint'                  => 'More options available',
-	'please_call'                       => '<b>Please call 01675 467 699</b>',
-	'value_unavailable'                 => 'Unavailable',
-);
-$yab_shop_public_lang = new yab_shop_MLP( 'yab_shop' , $_yab_shop_public_i18n);
 
 /**
  * Draw initialise and draw shop prefs
@@ -328,7 +256,7 @@ function yab_shop_prefs($evt, $stp)
 		if (yab_shop_table_exist('yab_shop_prefs') === true)
 			$content = yab_shop_display_prefs();
 	}
-	echo pagetop(yab_shop_admin_lang('shop_prefs'), $message).$content;
+	echo pagetop(gTxt('yab_shop_prefs'), $message).$content;
 }
 
 /**
@@ -349,7 +277,7 @@ function yab_shop_draw_instup($modus = 'install')
 	{
 		$sInput = sInput('yab_shop_update');
 		$button = gTxt('update');
-		$text = yab_shop_admin_lang('klick_to_update');
+		$text = gTxt('yab_shop_klick_to_update');
 	}
 
 	$out = startTable('list');
@@ -434,11 +362,11 @@ function yab_shop_version()
 function yab_shop_display_prefs($table = 'yab_shop_prefs')
 {
 	// choose step and event
-	$submit = sInput('yab_shop_prefs_save').eInput('yab_shop_prefs').hInput('prefs_id', '1');
+	$submit = sInput('yab_shop_prefs_save').eInput('yab_shop_prefs');
 
   $out = '<form method="post" action="index.php">'.startTable('list');
 
-	$rs = safe_rows_start('*', 'yab_shop_prefs', "type = 1 AND prefs_id = 1 ORDER BY event DESC, position ");
+	$rs = safe_rows_start('*', 'yab_shop_prefs', "type = 1 ORDER BY event DESC, position ");
 
 	// now make a html table from the database table
 	$cur_evt = '';
@@ -449,47 +377,47 @@ function yab_shop_display_prefs($table = 'yab_shop_prefs')
 			$cur_evt = $a['event'];
 			$out .= n.tr(
 				n.tdcs(
-					hed(yab_shop_admin_lang($a['event']), 2, ' class="pref-heading"')
+					hed(gTxt($a['event']), 2, ' class="pref-heading"')
 				, 2)
 			);
 		}
 
 		if ($a['html'] != 'yesnoradio')
-			$label = '<label for="'.$a['name'].'">'.yab_shop_admin_lang($a['name']).'</label>';
+			$label = '<label for="'.$a['name'].'">'.gTxt($a['name']).'</label>';
 		else
-			$label = yab_shop_admin_lang($a['name']);
+			$label = gTxt($a['name']);
 
 		if ($a['html'] == 'text_input')
 		{
 			// choose different text_input sizes for these fields
 			$look_for = array(
-				'promocode',
-				'promo_discount_percent',
-				'shipping_costs',
-				'checkout_section_name',
-				'checkout_thanks_site',
-				'checkout_required_fields',
-				'back_to_shop_link',
-				'custom_field_price_name',
-				'custom_field_property_1_name',
-				'custom_field_property_2_name',
-				'custom_field_property_3_name',
-				'custom_field_shipping_name',
-				'custom_field_tax_band',
-				'custom_field_weight',
-				'admin_mail',
-				'email_mime_type',
-				'email_body_form',
-				'paypal_business_mail',
-				'paypal_live_or_sandbox',
-				'paypal_certificate_id',
-				'paypal_certificates_path',
-				'paypal_public_certificate_name',
-				'paypal_my_public_certificate_name',
-				'paypal_my_private_key_name',
-				'google_live_or_sandbox',
-				'google_merchant_id',
-				'google_merchant_key',
+				'yab_shop_promocode',
+				'yab_shop_promo_discount_percent',
+				'yab_shop_shipping_costs',
+				'yab_shop_checkout_section_name',
+				'yab_shop_checkout_thanks_site',
+				'yab_shop_checkout_required_fields',
+				'yab_shop_back_to_shop_link',
+				'yab_shop_custom_field_price_name',
+				'yab_shop_custom_field_property_1_name',
+				'yab_shop_custom_field_property_2_name',
+				'yab_shop_custom_field_property_3_name',
+				'yab_shop_custom_field_shipping_name',
+				'yab_shop_custom_field_tax_band',
+				'yab_shop_custom_field_weight',
+				'yab_shop_admin_mail',
+				'yab_shop_email_mime_type',
+				'yab_shop_email_body_form',
+				'yab_shop_paypal_business_mail',
+				'yab_shop_paypal_live_or_sandbox',
+				'yab_shop_paypal_certificate_id',
+				'yab_shop_paypal_certificates_path',
+				'yab_shop_paypal_public_certificate_name',
+				'yab_shop_paypal_my_public_certificate_name',
+				'yab_shop_paypal_my_private_key_name',
+				'yab_shop_google_live_or_sandbox',
+				'yab_shop_google_merchant_id',
+				'yab_shop_google_merchant_key',
 			);
 			if (in_array($a['name'], $look_for))
 				$size = 50;
@@ -529,7 +457,7 @@ function yab_shop_display_prefs($table = 'yab_shop_prefs')
 
 	$out .= n.tr(
 		n.tda(
-			fInput('submit', 'Submit', gTxt('save_button'), 'publish').
+			fInput('submit', 'Submit', gTxt('save'), 'publish').
 			$submit
 		, ' colspan="2" class="noline"')
 	).
@@ -551,66 +479,13 @@ function yab_shop_config($what)
 }
 
 /**
- * Return public language strings
- *
- * @param string $what
- * @return string Return language if exists, otherwise @param
- */
-function yab_shop_lang($what)
-{
-	global $yab_shop_public_lang;
-	return $yab_shop_public_lang->gTxt( $what );
-}
-
-/**
- * Return admin language strings
- *
- * @param string $what
- * @return string Return language if exists, otherwise @param
- */
-function yab_shop_admin_lang($what)
-{
-	global $yab_shop_admin_lang;
-	return $yab_shop_admin_lang->gTxt( $what );
-}
-
-/**
  * Return prefs array from database
  *
  * @return array Prefs
  */
 function yab_shop_get_prefs()
 {
-	$r = safe_rows_start('name, val', 'yab_shop_prefs', 'prefs_id=1');
-
-	if ($r)
-	{
-		while ($a = nextRow($r))
-		{
-			$out[$a['name']] = $a['val'];
-		}
-		return $out;
-	}
-	return array();
-}
-
-/**
- * Return language array from database, depending of a
- * given event (for public or admin ui) and the choosen language
- *
- * @param string $lang_event
- * @return array
- */
-function yab_shop_get_lang($lang_event)
-{
-	// does choosen language exists in yab_shop_lang
-	$lang_count = safe_count('yab_shop_lang', "lang='".doSlash(LANG)."'");
-	if ($lang_count)
-		$lang_code = LANG;
-	else
-		$lang_code = 'en-gb'; // fallback language
-
-	$r = safe_rows_start('name, val', 'yab_shop_lang',"lang='".doSlash($lang_code)."' AND event='".doSlash($lang_event)."'");
+	$r = safe_rows_start('name, val', 'yab_shop_prefs', '1=1');
 
 	if ($r)
 	{
@@ -953,36 +828,6 @@ function yab_shop_text_area($name, $val, $size = '')
 }
 
 /**
- * Save language setting in admin ui
- *
- * @return string Message for pagetop()
- */
-function yab_shop_lang_save()
-{
-	$post = doSlash(stripPost());
-	$lang_code = LANG;
-	$prefnames = safe_column("name", "yab_shop_lang", "lang = '".doSlash(LANG)."' AND event = 'lang_public'");
-	if (!$prefnames)
-	{
-		$prefnames = safe_column("name", "yab_shop_lang", "lang = 'en-gb' AND event = 'lang_public'");
-		$lang_code = 'en-gb';
-	}
-
-	foreach($prefnames as $prefname)
-	{
-		if (isset($post[$prefname]))
-		{
-			safe_update(
-				"yab_shop_lang",
-				"val = '".$post[$prefname]."'",
-				"name = '".doSlash($prefname)."' AND lang = '".doSlash($lang_code)."'"
-			);
-		}
-  }
-	return yab_shop_admin_lang('lang_updated');
-}
-
-/**
  * Save prefs setting in admin ui
  *
  * @return string Message for pagetop()
@@ -990,7 +835,7 @@ function yab_shop_lang_save()
 function yab_shop_prefs_save()
 {
 	$post = doSlash(stripPost());
-	$prefnames = safe_column("name", "yab_shop_prefs", "prefs_id = 1 AND type = 1");
+	$prefnames = safe_column("name", "yab_shop_prefs", "type = 1");
 
 	foreach($prefnames as $prefname)
 	{
@@ -999,11 +844,11 @@ function yab_shop_prefs_save()
 			safe_update(
 				"yab_shop_prefs",
 				"val = '".$post[$prefname]."'",
-				"name = '".doSlash($prefname)."' and prefs_id = 1"
+				"name = '".doSlash($prefname)."'"
 			);
 		}
   }
-	return yab_shop_admin_lang('prefs_updated');
+	return gTxt('yab_shop_prefs_updated');
 }
 
 
@@ -1019,13 +864,18 @@ function yab_shop_update()
 
 	// Upgrade yab_shop_prefs val field from VARCHAR to TEXT
 	$ret = @safe_field("DATA_TYPE", "INFORMATION_SCHEMA.COLUMNS", "table_name = '" . PFX . "yab_shop_prefs' AND table_schema = '" . $DB->db . "' AND column_name = 'val'");
-	if ($ret != 'text')
-	{
-		safe_alter('yab_shop_prefs', "CHANGE `val` `val` TEXT NOT NULL DEFAULT ''", 1);
+
+	if ($ret != 'text') {
+		safe_alter('yab_shop_prefs', "CHANGE `val` `val` TEXT NOT NULL DEFAULT ''");
+	}
+
+	$cols = getThings('describe `'.PFX.'yab_shop_prefs`');
+
+	if (in_array('prefs_id', $cols)) {
+	    safe_alter('yab_shop_prefs', "DROP COLUMN prefs_id");
 	}
 
 	$common_atts = array(
-		'prefs_id' => '1',
 		'type'     => '1',
 		'event'    => 'shop_common_prefs',
 		'html'     => 'text_input',
@@ -1033,24 +883,24 @@ function yab_shop_update()
 	);
 
 	$new_prefs = array(
-		'custom_field_weight'      => '',
-		'custom_field_tax_band'    => '',
-		'checkout_required_fields' => 'firstname, surname, street, city, state, postal, country',
-		'email_mime_type'          => 'text/plain',
-		'email_body_form'          => '',
+		'yab_shop_custom_field_weight'      => '',
+		'yab_shop_custom_field_tax_band'    => '',
+		'yab_shop_checkout_required_fields' => 'firstname, surname, street, city, state, postal, country',
+		'yab_shop_email_mime_type'          => 'text/plain',
+		'yab_shop_email_body_form'          => '',
 	);
 
 	$entries = safe_column('name', 'yab_shop_prefs', '1=1');
-	foreach ($new_prefs as $prefname => $prefval)
-	{
-		if (!in_array($prefname, $entries))
-		{
+
+	foreach ($new_prefs as $prefname => $prefval) {
+		if (!in_array($prefname, $entries)) {
 			$items = array('name' => $prefname, 'val' => $prefval) + $common_atts;
 			$bits = array();
-			foreach ($items as $idx => $val)
-			{
+
+			foreach ($items as $idx => $val) {
 				$bits[] = $idx . '=' . doQuote(doSlash($val));
 			}
+
 			$qry = join(', ', $bits);
 			safe_insert('yab_shop_prefs', $qry);
 		}
@@ -1078,9 +928,9 @@ function yab_shop_uninstall()
 	{
 		$result = safe_query($query);
 		if (!$result)
-			return yab_shop_admin_lang('tables_delete_error');
+			return gTxt('yab_shop_tables_delete_error');
 	}
-	return yab_shop_admin_lang('tables_delete_success');
+	return gTxt('yab_shop_tables_delete_success');
 }
 
 /**
@@ -1115,63 +965,61 @@ function yab_shop_install($table)
 	{
 		case 'yab_shop_prefs':
 			$create_sql[] = "CREATE TABLE `".PFX."yab_shop_prefs` (
-				`prefs_id` int(11) NOT NULL,
 				`name` varchar(255) NOT NULL,
 				`val` text NOT NULL default '',
 				`type` smallint(5) unsigned NOT NULL default '1',
 				`event` varchar(18) NOT NULL default 'shop_prefs',
 				`html` varchar(64) NOT NULL default 'text_input',
 				`position` smallint(5) unsigned NOT NULL default '0',
-				UNIQUE KEY `prefs_idx` (`prefs_id`,`name`),
-				KEY `name` (`name`)
+				UNIQUE KEY `name` (`name`(50))
 			) $tabletype ";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'tax_rate', '19', 1, 'shop_common_prefs', 'text_input', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'shipping_costs', '7.50', 1, 'shop_common_prefs', 'text_area', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'shipping_via', 'UPS', 1, 'shop_common_prefs', 'text_input', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'free_shipping', '20.00', 1, 'shop_common_prefs', 'text_input', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'currency', 'EUR', 1, 'shop_common_prefs', 'text_input', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'promocode', '', 1, 'shop_common_prefs', 'text_input', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'promo_discount_percent', '10', 1, 'shop_common_prefs', 'text_input', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'tax_inclusive', '1', 1, 'shop_common_prefs', 'yesnoradio', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'payment_method_acc', '1', 1, 'shop_common_prefs', 'yesnoradio', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'payment_method_pod', '1', 1, 'shop_common_prefs', 'yesnoradio', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'payment_method_pre', '1', 1, 'shop_common_prefs', 'yesnoradio', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'payment_method_paypal', '0', 1, 'shop_common_prefs', 'yesnoradio', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'payment_method_google', '0', 1, 'shop_common_prefs', 'yesnoradio', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'using_checkout_state', '0', 1, 'shop_common_prefs', 'yesnoradio', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'using_checkout_country', '0', 1, 'shop_common_prefs', 'yesnoradio', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'using_tou_checkbox', '1', 1, 'shop_common_prefs', 'yesnoradio', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'checkout_section_name', 'checkout', 1, 'shop_common_prefs', 'text_input', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'checkout_thanks_site', 'http://domain/shop/thank-you', 1, 'shop_common_prefs', 'text_input', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'checkout_required_fields', 'firstname, surname, street, city, state, postal, country', 1, 'shop_common_prefs', 'text_input', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'back_to_shop_link', 'http://domain/shop/', 1, 'shop_common_prefs', 'text_input', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'custom_field_price_name', 'Price', 1, 'shop_common_prefs', 'text_input', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'custom_field_property_1_name', 'Size', 1, 'shop_common_prefs', 'text_input', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'custom_field_property_2_name', 'Color', 1, 'shop_common_prefs', 'text_input', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'custom_field_property_3_name', 'Variant', 1, 'shop_common_prefs', 'text_input', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'custom_field_shipping_name', '', 1, 'shop_common_prefs', 'text_input', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'custom_field_tax_band', '', 1, 'shop_common_prefs', 'text_input', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'custom_field_weight', '', 1, 'shop_common_prefs', 'text_input', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'admin_mail', 'admin@domain.tld', 1, 'shop_common_prefs', 'text_input', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'order_affirmation_mail', '1', 1, 'shop_common_prefs', 'yesnoradio', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'email_mime_type', 'text/plain', 1, 'shop_common_prefs', 'text_input', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'email_body_form', '', 1, 'shop_common_prefs', 'text_input', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'use_property_prices', '0', 1, 'shop_common_prefs', 'yesnoradio', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'use_checkout_images', '0', 1, 'shop_common_prefs', 'yesnoradio', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'use_encrypted_paypal_button', '1', 1, 'paypal_prefs', 'yesnoradio', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'paypal_prefilled_country', 'en', 1, 'paypal_prefs', 'text_input', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'paypal_interface_language', 'en', 1, 'paypal_prefs', 'text_input', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'paypal_business_mail', 'admin@domain.tld', 1, 'paypal_prefs', 'text_input', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'paypal_live_or_sandbox', 'sandbox', 1, 'paypal_prefs', 'text_input', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'paypal_certificate_id', 'CERTIFICATEID', 1, 'paypal_prefs', 'text_input', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'paypal_certificates_path', '/path/to/your/certificates', 1, 'paypal_prefs', 'text_input', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'paypal_public_certificate_name', 'paypal_cert.pem', 1, 'paypal_prefs', 'text_input', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'paypal_my_public_certificate_name', 'my-public-certificate.pem', 1, 'paypal_prefs', 'text_input', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'paypal_my_private_key_name', 'my-private-key.pem', 1, 'paypal_prefs', 'text_input', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'google_live_or_sandbox', 'sandbox', 1, 'google_prefs', 'text_input', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'google_merchant_id', 'your-merchant-id', 1, 'google_prefs', 'text_input', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'google_merchant_key', 'your-merchant-id', 1, 'google_prefs', 'text_input', 50)";
-			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES (1, 'yab_shop_version', '".doSlash($yab_shop_version)."', 2, 'version', '', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_tax_rate', '19', 1, 'shop_common_prefs', 'text_input', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_shipping_costs', '7.50', 1, 'shop_common_prefs', 'text_area', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_shipping_via', 'UPS', 1, 'shop_common_prefs', 'text_input', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_free_shipping', '20.00', 1, 'shop_common_prefs', 'text_input', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_currency', 'EUR', 1, 'shop_common_prefs', 'text_input', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_promocode', '', 1, 'shop_common_prefs', 'text_input', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_promo_discount_percent', '10', 1, 'shop_common_prefs', 'text_input', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_tax_inclusive', '1', 1, 'shop_common_prefs', 'yesnoradio', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_payment_method_acc', '1', 1, 'shop_common_prefs', 'yesnoradio', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_payment_method_pod', '1', 1, 'shop_common_prefs', 'yesnoradio', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_payment_method_pre', '1', 1, 'shop_common_prefs', 'yesnoradio', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_payment_method_paypal', '0', 1, 'shop_common_prefs', 'yesnoradio', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_payment_method_google', '0', 1, 'shop_common_prefs', 'yesnoradio', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_using_checkout_state', '0', 1, 'shop_common_prefs', 'yesnoradio', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_using_checkout_country', '0', 1, 'shop_common_prefs', 'yesnoradio', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_using_tou_checkbox', '1', 1, 'shop_common_prefs', 'yesnoradio', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_checkout_section_name', 'checkout', 1, 'shop_common_prefs', 'text_input', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_checkout_thanks_site', 'http://domain/shop/thank-you', 1, 'shop_common_prefs', 'text_input', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_checkout_required_fields', 'firstname, surname, street, city, state, postal, country', 1, 'shop_common_prefs', 'text_input', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_back_to_shop_link', 'http://domain/shop/', 1, 'shop_common_prefs', 'text_input', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_custom_field_price_name', 'Price', 1, 'shop_common_prefs', 'text_input', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_custom_field_property_1_name', 'Size', 1, 'shop_common_prefs', 'text_input', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_custom_field_property_2_name', 'Color', 1, 'shop_common_prefs', 'text_input', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_custom_field_property_3_name', 'Variant', 1, 'shop_common_prefs', 'text_input', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_custom_field_shipping_name', '', 1, 'shop_common_prefs', 'text_input', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_custom_field_tax_band', '', 1, 'shop_common_prefs', 'text_input', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_custom_field_weight', '', 1, 'shop_common_prefs', 'text_input', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_admin_mail', 'admin@domain.tld', 1, 'shop_common_prefs', 'text_input', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_order_affirmation_mail', '1', 1, 'shop_common_prefs', 'yesnoradio', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_email_mime_type', 'text/plain', 1, 'shop_common_prefs', 'text_input', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_email_body_form', '', 1, 'shop_common_prefs', 'text_input', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_use_property_prices', '0', 1, 'shop_common_prefs', 'yesnoradio', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_use_checkout_images', '0', 1, 'shop_common_prefs', 'yesnoradio', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_use_encrypted_paypal_button', '1', 1, 'paypal_prefs', 'yesnoradio', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_paypal_prefilled_country', 'en', 1, 'paypal_prefs', 'text_input', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_paypal_interface_language', 'en', 1, 'paypal_prefs', 'text_input', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_paypal_business_mail', 'admin@domain.tld', 1, 'paypal_prefs', 'text_input', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_paypal_live_or_sandbox', 'sandbox', 1, 'paypal_prefs', 'text_input', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_paypal_certificate_id', 'CERTIFICATEID', 1, 'paypal_prefs', 'text_input', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_paypal_certificates_path', '/path/to/your/certificates', 1, 'paypal_prefs', 'text_input', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_paypal_public_certificate_name', 'paypal_cert.pem', 1, 'paypal_prefs', 'text_input', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_paypal_my_public_certificate_name', 'my-public-certificate.pem', 1, 'paypal_prefs', 'text_input', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_paypal_my_private_key_name', 'my-private-key.pem', 1, 'paypal_prefs', 'text_input', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_google_live_or_sandbox', 'sandbox', 1, 'google_prefs', 'text_input', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_google_merchant_id', 'your-merchant-id', 1, 'google_prefs', 'text_input', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_google_merchant_key', 'your-merchant-id', 1, 'google_prefs', 'text_input', 50)";
+			$create_sql[] = "INSERT INTO `".PFX."yab_shop_prefs` VALUES ('yab_shop_version', '".doSlash($yab_shop_version)."', 2, 'version', '', 50)";
 			break;
 		default:
 			break;
@@ -1402,7 +1250,7 @@ if (0) {
 	<h2 id="3">3. Preferences for Google checkout</h2>
 
 	<p>If you are choose google checkout as payment method and your location is in US I prefer the following setup, &#8216;cause of different tax rates and tax calculation methods:<br />
-Set <code>Tax Rate (%)</code> to <code>0</code> and <code>10  Tax inclusive (otherwise exclusive)</code> to <code>No</code>. In your google checkout merchant account you can configure the right tax rates for the states. The tax calculation will be done by google. In <code>Checkout for tax exclusive</code> in the <a href="?event=yab_shop_language">Yab_Shop L10n</a> you can give a notice to your customers that the tax will be calculated later (by google checkout).</p>
+Set <code>Tax Rate (%)</code> to <code>0</code> and <code>10  Tax inclusive (otherwise exclusive)</code> to <code>No</code>. In your google checkout merchant account you can configure the right tax rates for the states. The tax calculation will be done by google.</p>
 
 	<p>For google checkout you have to set <code>Shipping via</code> with your appropriate shipping method.</p>
 
@@ -1421,9 +1269,6 @@ Set <code>Tax Rate (%)</code> to <code>0</code> and <code>10  Tax inclusive (oth
 		</tr>
 	</table>
 
-	<h2 id="4">4. Yab_Shop public language and localisation</h2>
-
-	<p>Localized phrases for the html and mail output. If you want prefilled language and localisations, look for an yab_shop_add_language_xx-xx plugin.</p>
 # --- END PLUGIN HELP ---
 -->
 <?php
