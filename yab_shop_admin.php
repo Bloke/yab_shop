@@ -475,7 +475,7 @@ function yab_shop_display_prefs($table = 'yab_shop_prefs')
 function yab_shop_config($what)
 {
 	global $yab_shop_prefs;
-	return $yab_shop_prefs[$what];
+	return $yab_shop_prefs['yab_shop_'.$what];
 }
 
 /**
