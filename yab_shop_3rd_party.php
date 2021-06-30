@@ -536,7 +536,7 @@ if (!class_exists('PayPalEWP'))
 
 			$out = fopen("{$dataFile}_signed.txt", "w+");
 
-			$keySignData = ($this->privateKeyPass) ? array(0 => $privateKey, 1 => $this->privateKeyPass) : $privateKey;
+			$keySignData = ($this->privateKeyPass) ? array(0 => $this->privateKey, 1 => $this->privateKeyPass) : $this->privateKey;
 
 			if (!openssl_pkcs7_sign("{$dataFile}_data.txt", "{$dataFile}_signed.txt", $this->certificate, $keySignData, array(), PKCS7_BINARY))
 			{
