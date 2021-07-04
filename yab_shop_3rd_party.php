@@ -314,7 +314,7 @@ if (!class_exists('wfCart'))
 		{
 			$this->itemcount = 0;
 			$this->total = 0;
-			if (sizeof($this->items > 0))
+			if (sizeof($this->items) > 0)
 			{
 				foreach ($this->items as $item)
 				{
