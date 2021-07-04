@@ -110,6 +110,26 @@ if (!defined('txpinterface'))
  *  -> Revert the shop_admin strings to their defaults before publish
  */
 
+if (class_exists('\Textpattern\Tag\Registry')) {
+    Txp::get('\Textpattern\Tag\Registry')
+        ->register('yab_shop_add')
+        ->register('yab_shop_cart')
+        ->register('yab_shop_cart_items')
+        ->register('yab_shop_cart_link')
+        ->register('yab_shop_cart_quantity')
+        ->register('yab_shop_cart_message')
+        ->register('yab_shop_cart_subtotal')
+        ->register('yab_shop_checkout')
+        ->register('yab_shop_custom_field')
+        ->register('yab_shop_mail_body')
+        ->register('yab_shop_mail_info')
+        ->register('yab_shop_mail_item')
+        ->register('yab_shop_mail_label')
+        ->register('yab_shop_price')
+        ->register('yab_shop_show_config')
+        ;
+}
+
 function yab_shop_cart($atts, $thing = null)
 {
 	extract(
