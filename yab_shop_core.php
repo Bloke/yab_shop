@@ -986,7 +986,7 @@ function yab_shop_check_required_fields($ps_order)
 
 function yab_shop_required_fields() {
 	// Permitted fields that can be optional/required
-	$opt_fields = do_list('firstname, surname, street, city, state, postal, country, email');
+	$opt_fields = do_list('firstname, surname, street, city, state, postal, country, email, phone');
 
 	$req_fields = do_list(yab_shop_config('checkout_required_fields'));
 	$req_cls = ' yab-shop-required';
@@ -2026,6 +2026,7 @@ function yab_shop_available_shipping_options()
 	$weight = 0.00;
 	$shipping_costs = 0.00;
 	$cost_found = false;
+	$disabled_methods = 0;
 	$out = array();
 
 	if (yab_shop_config('custom_field_weight') != '') {
@@ -2053,7 +2054,6 @@ function yab_shop_available_shipping_options()
 		foreach ($weight_bands as $widx => $wband) {
 			$wparts = do_list($wband, '--');
 			$cweight = floatval($wparts[0]);
-
 			// Is the cart weight under the current band or have we
 			// reached the end of the bands without finding a match
 			// (i.e. cart is heavier than the heaviest defined weight)
@@ -2064,6 +2064,7 @@ function yab_shop_available_shipping_options()
 						$out['unavailable']['msg'][] = 'yab_err_max_weight';
 					}
 				}
+
 				if ($cost_found === false) {
 					if ($weight > 0 && ($method == '' || $method == $sidx) ) {
 						$shipping_costs = floatval($wparts[1]);
@@ -2076,7 +2077,7 @@ function yab_shop_available_shipping_options()
 		if (is_numeric($sidx)) {
 			// Regular flat-rate shipping
 			$shipping_costs = $sidx;
-		} else if (count($shipping_bands) == 1) {
+		} elseif (count($shipping_bands) == 1) {
 			// One band
 			$shipping_options = $band_name;
 			$cart->set_ship_method($sidx);
@@ -2085,10 +2086,12 @@ function yab_shop_available_shipping_options()
 			// Multi-band
 			$numbands = count($weight_bands) - 1;
 			$disabled = false;
+
 			if (in_array($sidx, $out['unavailable']['method'])) {
 				$disabled_methods++;
 				$disabled = true;
 			}
+
 			$shipping_options .= '<option value="' . $sidx . '"' . (($method == $sidx) ? ' selected="selected"' : '') . (($disabled) ? ' disabled="disabled"' : '') . '>' . $band_name . '</option>';
 		}
 	}
@@ -2097,17 +2100,18 @@ function yab_shop_available_shipping_options()
 		$shipping_options = '<form method="post" id="yab-ship-method" action="'.pagelinkurl(array('s' => yab_shop_config('checkout_section_name'))).'" name="edit_ship_method"><select name="shipping_band" onchange="this.form.submit()">' . $shipping_options .'</select></form>';
 	}
 
-	if (yab_shop_config('custom_field_shipping_name') != '')
-	{
+	if (yab_shop_config('custom_field_shipping_name') != '') {
 		$special_cost = 0.00;
-		foreach ($cart->get_contents() as $item)
+
+		foreach ($cart->get_contents() as $item) {
 			$special_cost += yab_shop_replace_commas($item['spec_shipping']);
+		}
 
 		$shipping_costs += $special_cost;
 	}
 
 	// Current shipping method unavailable? Say so
-	if (in_array($method, $out['unavailable']['method'])) {
+	if (isset($out['unavailable']['method']) && in_array($method, $out['unavailable']['method'])) {
 		$out['method_available'] = false;
 		$shipping_costs = 'NA';
 	} else {
