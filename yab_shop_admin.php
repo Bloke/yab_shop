@@ -137,7 +137,7 @@ yab_shop_promocode_label => Promo code
 yab_shop_promocode_button => Apply
 yab_shop_promocode_error => Sorry, wrong promo code
 yab_shop_promocode_success => Promo code applied.
-yab_shop_checkout_required_field_notice => <p>If you do not already have an account, you may create one by choosing a login name in the form below. Having an account will entitle you to discount special offers and promotions, as well as being the first to get hold of the latest news and offers.</p><p>You can either enter your details below to save them with your account, or skip it and go straight to PayPal. Note that PayPal accept credit/debit cards too. If you have problems with the shop, please <a href="/contact">get in touch by e-mail</a> or call <txp:output_form form="phone_number" />.</p>
+yab_shop_checkout_required_field_notice => <p>If you have problems with the shop, please get in touch.</p>
 yab_shop_checkout_firstname => First Name
 yab_shop_checkout_surname => Last Name
 yab_shop_checkout_street => Street
