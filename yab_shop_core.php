@@ -1061,7 +1061,10 @@ function yab_shop_build_paypal_form($cart)
 	$message = gTxt('yab_shop_checkout_paypal_no_forward');
 	$message2 = gTxt('yab_shop_checkout_paypal_forward');
 	$business_email = yab_shop_config('paypal_business_mail');
-	$country = yab_shop_return_input('country'.$req_matrix['country']['mod']);
+	$country = '';
+	if (ps('country'.$req_matrix['country']['mod'])) {
+		$country = yab_shop_return_input('country'.$req_matrix['country']['mod']);
+	}
 	if (!$country) {
 		$country = yab_shop_config('paypal_prefilled_country');
 	}
