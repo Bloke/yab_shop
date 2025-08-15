@@ -864,7 +864,7 @@ function yab_shop_update()
 	global $DB;
 
 	// Upgrade yab_shop_prefs val field from VARCHAR to TEXT
-	$ret = @safe_field("DATA_TYPE", "INFORMATION_SCHEMA.COLUMNS", "table_name = '" . PFX . "yab_shop_prefs' AND table_schema = '" . $DB->db . "' AND column_name = 'val'");
+	$ret = safe_query("SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" . PFX . "yab_shop_prefs' AND table_schema = '" . $DB->db . "' AND column_name = 'val'");
 
 	if ($ret != 'text') {
 		safe_alter('yab_shop_prefs', "CHANGE `val` `val` TEXT NOT NULL DEFAULT ''");
@@ -946,10 +946,7 @@ function yab_shop_install($table)
 	$version = mysqli_get_server_info($DB->link);
 	$dbcharset = $txpcfg['dbcharset'];
 
-	if (intval($version[0]) >= 5 || preg_match('#^4\.(0\.[2-9]|(1[89]))|(1\.[2-9])#',$version))
-		$tabletype = " ENGINE=MyISAM ";
-	else
-		$tabletype = " TYPE=MyISAM ";
+	$tabletype = '';
 
 	if (isset($dbcharset) && (intval($version[0]) >= 5 || preg_match('#^4\.[1-9]#',$version)))
 	{
