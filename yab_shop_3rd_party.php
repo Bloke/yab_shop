@@ -218,7 +218,7 @@ if (!class_exists('wfCart'))
 			return $items;
 		}
 
-		function add_item($itemid, $txpid, $qty = 1, $price = false, $rrp = false, $saving, $name = false, $property_1 = false, $property_2 = false, $property_3 = false, $spec_shipping = false, $tax = false, $weight = false) 
+		function add_item($itemid, $txpid, $qty = 1, $price = false, $rrp = false, $saving = 0, $name = false, $property_1 = false, $property_2 = false, $property_3 = false, $spec_shipping = false, $tax = false, $weight = false) 
 		{
 			if ($qty > 0)
 			{
